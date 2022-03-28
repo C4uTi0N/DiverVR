@@ -1,105 +1,49 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
-[RequireComponent(typeof(Rigidbody))]
+
 public class PlayerController : MonoBehaviour
 {
     private Rigidbody rb;
+    private Transform xrOrigin;
     private Transform playerCamera;
+    [SerializeField] private Vector3 moveDirection;
+    [Range(0f, 10f)]
+    [SerializeField] private float moveSpeed = 10f;
+    [SerializeField] private Vector2 rotationDirection;
+    [Range(0f, 1f)]
+    public float rotationSpeed = 1f;
 
-    // Head Controls
-    [Header("Head Controls")]
-    [Range(0.1f, 10f)]
-    public float headSensitivity = 2;
-    [SerializeField] private float mouseX = 0;
-    [SerializeField] private float mouseY = 0;
-
-    // Body Controls
-    [Header("Body Controls")]
-    [Range(0.1f, 1f)]
-    public float bodySensitivity = 0.5f;
-    [SerializeField] private float yaw = 0;
-    [SerializeField] private float pitch = 0;
-    [SerializeField] private float roll = 0;
-
-    // Movement Controls
-    [Header("Movement Settings")]
-    [SerializeField] private float moveSpeed = 20;
-    [SerializeField] private float velocity;
-    [SerializeField] private bool movementLockToCamera = true;
-    private float moveForward;
-    private float moveRight;
-    private Vector3 moveDirection;
-
-
-    void Awake()
+    // Start is called before the first frame update
+    void Start()
     {
         rb = GetComponent<Rigidbody>();
-        playerCamera = GameObject.Find("Player Camera").GetComponent<Transform>();
+        rb.freezeRotation = true;
+        rb.useGravity = false;
+        rb.drag = 6;
     }
 
-    
     void Update()
     {
-        Movement();
-        HeadControl();
-        BodyControl();
-        DebugInputs();
-    }
-
-    private void FixedUpdate()
-    {
-        MovePlayer();
-    }
-    private void HeadControl()
-    {
-        mouseX += Input.GetAxis("Mouse X") * headSensitivity;
-        mouseY -= Input.GetAxis("Mouse Y") * headSensitivity;
-
-        playerCamera.localEulerAngles = new Vector2(mouseY, mouseX);
 
     }
 
-    private void BodyControl()
+    void FixedUpdate()
     {
-        pitch = Input.GetAxis("Numpad Pitch") * bodySensitivity;
-        yaw = Input.GetAxis("Numpad Yaw") * bodySensitivity;
-        roll = Input.GetAxis("Numpad Roll") * bodySensitivity;
-
-        transform.Rotate(new Vector3(-pitch, yaw, -roll));
+        rb.AddForce(moveDirection);
     }
 
-    private void Movement()
+    public void MoveHorizontal(InputAction.CallbackContext context)
     {
-        // WASD
-        moveForward = Input.GetAxis("Vertical");
-        moveRight = Input.GetAxis("Horizontal");
-
-        if (!movementLockToCamera)
-            moveDirection = transform.forward * moveForward + transform.right * moveRight;
-        else
-            moveDirection = playerCamera.forward * moveForward + playerCamera.right * moveRight;
-
-        velocity = rb.velocity.magnitude;
+        Vector2 direction = -context.ReadValue<Vector2>();
+        moveDirection = new Vector3(direction.x, 0, direction.y) * moveSpeed;
     }
 
-    private void MovePlayer()
+    public void Look(InputAction.CallbackContext context)
     {
-        rb.AddForce(moveDirection.normalized * moveSpeed, ForceMode.Acceleration);
-    }
-
-    private void DebugInputs()
-    {
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            if (movementLockToCamera)
-            {
-                transform.rotation = playerCamera.rotation;
-                mouseX = 0;
-                mouseY = 0;
-            }
-            movementLockToCamera = movementLockToCamera ? false : true;
-        }
+        rotationDirection = context.ReadValue<Vector2>();
+        transform.Rotate(new Vector3(0, rotationDirection.x, rotationDirection.y) * rotationSpeed);
     }
 }

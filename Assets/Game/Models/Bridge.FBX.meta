@@ -1,23 +1,8 @@
 fileFormatVersion: 2
-guid: 3f81c5bb86005704ba867a11bb341440
+guid: 8122be1379141974e9759b6ad28eeec2
 ModelImporter:
   serializedVersion: 20200
-  internalIDToNameTable:
-  - first:
-      74: 1827226128182048838
-    second: Take 001
-  - first:
-      74: 4317471265027787423
-    second: CoronaCamera001|CoronaCamera001|Take 001|BaseLayer
-  - first:
-      74: -2511276249387187349
-    second: CoronaCamera001|CoronaSun001|Take 001|BaseLayer
-  - first:
-      74: -7394813214729223529
-    second: CoronaSun001|CoronaCamera001|Take 001|BaseLayer
-  - first:
-      74: 8351409916908367690
-    second: CoronaSun001|CoronaSun001|Take 001|BaseLayer
+  internalIDToNameTable: []
   externalObjects: {}
   materials:
     materialImportMode: 2
