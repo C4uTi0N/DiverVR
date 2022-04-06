@@ -193,6 +193,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Velocity",
+                    "type": "Value",
+                    "id": "320fb09a-b9c1-4687-9731-d7d79146770f",
+                    "expectedControlType": "Vector3",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -342,7 +351,7 @@
                 {
                     "name": "",
                     "id": "1458d4ea-a188-4ad0-9215-0e48997da150",
-                    "path": "<XRController>{LeftHand}/{gripButton}",
+                    "path": "<XRController>{LeftHand}/gripPressed",
                     "interactions": "",
                     "processors": "",
                     "groups": "XR Usage",
@@ -435,6 +444,17 @@
                     "processors": "",
                     "groups": "XR Usage",
                     "action": "TriggerTouch",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ea3eb8d1-e989-49cc-9475-667661211ba6",
+                    "path": "<XRController>{LeftHand}/deviceVelocity",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "XR Usage",
+                    "action": "Velocity",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -632,6 +652,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Velocity",
+                    "type": "Value",
+                    "id": "7c3f17ac-95da-408f-93db-cd7074f78cfd",
+                    "expectedControlType": "Vector3",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -781,7 +810,7 @@
                 {
                     "name": "",
                     "id": "6f0b2479-b471-4775-8381-980b7957af20",
-                    "path": "<XRController>{RightHand}/{gripButton}",
+                    "path": "<XRController>{RightHand}/gripPressed",
                     "interactions": "",
                     "processors": "",
                     "groups": "XR Usage",
@@ -874,6 +903,17 @@
                     "processors": "",
                     "groups": "XR Usage",
                     "action": "TriggerTouch",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "64b7d2b1-3b76-4054-87a3-60de63b570be",
+                    "path": "<XRController>{RightHand}/deviceVelocity",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "XR Usage",
+                    "action": "Velocity",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
