@@ -19,15 +19,8 @@ public class DiveSettingsManager : MonoBehaviour
     // =======================================================
 
 
-    // UI-Refs, Diver, user input variables
+    // UI-Refs, user input variables
     // =======================================================
-    [Header("Diver UI Elements")]
-    [SerializeField] private TextMeshProUGUI diverHeightValue;
-    [SerializeField] private Slider diverHeightSlider;
-    [SerializeField] private TextMeshProUGUI diverWeightValue;
-    [SerializeField] private Slider diverWeightSlider;
-    [SerializeField] private TextMeshProUGUI RMVValue;
-    [SerializeField] private Slider RMVSlider;
     [SerializeField] private TextMeshProUGUI suitThicknessValue;
     [SerializeField] private Slider suitThicknessSlider;
     [SerializeField] private TextMeshProUGUI leadWeightsValue;
@@ -64,9 +57,6 @@ public class DiveSettingsManager : MonoBehaviour
         diveSettings.waterTemp = waterTempSlider.value;
         diveSettings.waterDensity = waterDensitySlider.value;
         diveSettings.atmosphericPressure = atmosphericPressureSlider.value;
-        diveSettings.diverHeight = diverHeightSlider.value;
-        diveSettings.diverWeight = diverWeightSlider.value;
-        diveSettings.RMV = RMVSlider.value;
         diveSettings.suitThickness = suitThicknessSlider.value;
 
         diveSettings.matValue = tankMaterialsDropdown.value;
@@ -85,9 +75,6 @@ public class DiveSettingsManager : MonoBehaviour
         waterTempValue.text = diveSettings.waterTemp.ToString();
         waterDensityValue.text = diveSettings.waterDensity.ToString();
         atmosphericPressureValue.text = diveSettings.atmosphericPressure.ToString();
-        diverHeightValue.text = diveSettings.diverHeight.ToString();
-        diverWeightValue.text = diveSettings.diverWeight.ToString();
-        RMVValue.text = diveSettings.RMV.ToString();
         suitThicknessValue.text = diveSettings.suitThickness.ToString();
 
         tankMaterialsDropdown.value = diveSettings.matValue;
@@ -112,18 +99,6 @@ public class DiveSettingsManager : MonoBehaviour
         atmosphericPressureSlider.onValueChanged.AddListener((val) => {
             diveSettings.atmosphericPressure = val;
             atmosphericPressureValue.text = val.ToString();
-        });
-        diverHeightSlider.onValueChanged.AddListener((val) => {
-            diveSettings.diverHeight = val;
-            diverHeightValue.text = val.ToString();
-        });
-        diverWeightSlider.onValueChanged.AddListener((val) => {
-            diveSettings.diverWeight = val;
-            diverWeightValue.text = val.ToString();
-        });
-        RMVSlider.onValueChanged.AddListener((val) => {
-            diveSettings.RMV = val;
-            RMVValue.text = val.ToString();
         });
         suitThicknessSlider.onValueChanged.AddListener((val) => {
             diveSettings.suitThickness = val;
@@ -169,18 +144,13 @@ public class DiveSettingsManager : MonoBehaviour
         diveSettings.waterDensity = 1025f;          // Kg/m3
         diveSettings.atmosphericPressure = 1013f;   // Air pressure in hPa (same as millibar)
 
-        diveSettings.diverHeight = 180;             // cm
-        diveSettings.diverWeight = 80;              // kg
-        diveSettings.RMV = 15f;                     // Respiratory minute volume
-        diveSettings.suitThickness = 5;             // mm
-
         diveSettings.matValue = 1;
-
         diveSettings.tankEmptyWeight = 17f;         // kg
         diveSettings.tankStartPress = 300;          // bar
         diveSettings.tankCapacity = 10f;            // liter
         diveSettings.leadWeights = 4f;              // kg
         diveSettings.BCD_weight = 3.5f;             // kg
         diveSettings.BCD_Capacity = 15f;            // liter
+        diveSettings.suitThickness = 5;             // mm
     }
 }
