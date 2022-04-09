@@ -7,8 +7,33 @@ public class DiveSettingsManager : MonoBehaviour
     public DiveSettings diveSettings;
     public DiverController diverController;
 
-    // UI-Refs, Environment variables
-    // =======================================================
+    #region Pre-define and Lock Values
+    [Header("Lock Values (true = locked | false = unlocked)")]
+    [SerializeField] private bool lockWaterTemperature = false;
+    [SerializeField, Range(-5f, 40f)] private float predefinedWaterTemperature = 15f;
+    [SerializeField] private bool lockWaterDesnity = false;
+    [SerializeField, Range(1000f, 1040f)] private float predefinedWaterDesnity = 1025f;
+    [SerializeField] private bool lockAtmosphericPressure = false;
+    [SerializeField, Range(850f, 1100f)] private float predefinedAtmophericPressure = 1013f;
+    [SerializeField] private bool lockTankMaterial = false;
+    [SerializeField, Range(0, 1)] private int predefinedTankMaterial = 1;
+    [SerializeField] private bool lockTankEmptyWeight = false;
+    [SerializeField, Range(3f, 30f)] private float predefinedTankEmptyWeight = 17f;
+    [SerializeField] private bool lockTankStartPressure = false;
+    [SerializeField, Range(100f, 500f)] private float predefinedTankstartPressure = 300f;
+    [SerializeField] private bool lockTankCapacity = false;
+    [SerializeField, Range(3f, 20f)] private float predefinedTankCapacity = 10f;
+    [SerializeField] private bool lockLeadWeights = false;
+    [SerializeField, Range(1f, 50f)] private float predefinedLeadWeights = 4f;
+    [SerializeField] private bool lockBCDWeight = false;
+    [SerializeField, Range(1f, 6f)] private float predefinedBCDWeight = 3.5f;
+    [SerializeField] private bool lockBCDCapacity = false;
+    [SerializeField, Range(5f, 40f)] private float predefinedBCDCapacity = 15f;
+    [SerializeField] private bool lockSuitThickness = false;
+    [SerializeField, Range(1f, 10f)] private float predefinedSuitThickness = 5f;
+    #endregion
+
+    #region Environment variables
     [Header("Environment UI Elements")]
     [SerializeField] private TextMeshProUGUI waterTempValue;
     [SerializeField] private Slider waterTempSlider;
@@ -16,11 +41,9 @@ public class DiveSettingsManager : MonoBehaviour
     [SerializeField] private Slider waterDensitySlider;
     [SerializeField] private TextMeshProUGUI atmosphericPressureValue;
     [SerializeField] private Slider atmosphericPressureSlider;
-    // =======================================================
+    #endregion
 
-
-    // UI-Refs, user input variables
-    // =======================================================
+    #region Equipment variables
     [SerializeField] private TextMeshProUGUI suitThicknessValue;
     [SerializeField] private Slider suitThicknessSlider;
     [SerializeField] private TextMeshProUGUI leadWeightsValue;
@@ -43,13 +66,46 @@ public class DiveSettingsManager : MonoBehaviour
 
     [Header("Reset UI Elements")]
     [SerializeField] private Button defaultsButton;
+    #endregion
 
 
     private void Start()
     {
+        LockValues();
+        PredefineSliderValues();
         GetSliderValues();
         SetUIValueues();
         SetListeners();
+    }
+
+    void LockValues()
+    {
+        waterTempSlider.interactable = !lockWaterTemperature;
+        waterDensitySlider.interactable = !lockWaterDesnity;
+        atmosphericPressureSlider.interactable = !lockAtmosphericPressure;
+        tankMaterialsDropdown.interactable = !lockTankMaterial;
+        tankEmptyWeightSlider.interactable = !lockTankEmptyWeight;
+        tankStartPressSlider.interactable = !lockTankStartPressure;
+        tankCapacitySlider.interactable = !lockTankCapacity;
+        leadWeightsSlider.interactable = !lockLeadWeights;
+        BCDWeightSlider.interactable = !lockBCDWeight;
+        BCDCapacitySlider.interactable = !lockBCDCapacity;
+        suitThicknessSlider.interactable = !lockSuitThickness;
+    }
+
+    void PredefineSliderValues()
+    {
+        waterTempSlider.value = predefinedWaterTemperature;
+        waterDensitySlider.value = predefinedWaterDesnity;
+        atmosphericPressureSlider.value = predefinedAtmophericPressure;
+        tankMaterialsDropdown.value = predefinedTankMaterial;
+        tankEmptyWeightSlider.value = predefinedTankEmptyWeight;
+        tankStartPressSlider.value = predefinedTankstartPressure;
+        tankCapacitySlider.value = predefinedTankCapacity;
+        leadWeightsSlider.value = predefinedLeadWeights;
+        BCDWeightSlider.value = predefinedBCDWeight;
+        BCDCapacitySlider.value = predefinedBCDCapacity;
+        suitThicknessSlider.value = predefinedSuitThickness;
     }
 
     void GetSliderValues()
@@ -140,17 +196,28 @@ public class DiveSettingsManager : MonoBehaviour
     public void ApplyDefaultValues()
     {
         diveSettings._waterSurface = 0f;            // y-height of the water surface
-        diveSettings.waterTemp = 15f;               // Celcius
-        diveSettings.waterDensity = 1025f;          // Kg/m3
-        diveSettings.atmosphericPressure = 1013f;   // Air pressure in hPa (same as millibar)
+        if (!lockWaterTemperature)
+            diveSettings.waterTemp = 15f;               // Celcius
+        if (!lockWaterDesnity)
+            diveSettings.waterDensity = 1025f;          // Kg/m3
+        if (!lockAtmosphericPressure)
+            diveSettings.atmosphericPressure = 1013f;   // Air pressure in hPa (same as millibar)
 
-        diveSettings.matValue = 1;
-        diveSettings.tankEmptyWeight = 17f;         // kg
-        diveSettings.tankStartPress = 300;          // bar
-        diveSettings.tankCapacity = 10f;            // liter
-        diveSettings.leadWeights = 4f;              // kg
-        diveSettings.BCD_weight = 3.5f;             // kg
-        diveSettings.BCD_Capacity = 15f;            // liter
-        diveSettings.suitThickness = 5;             // mm
+        if (!lockTankMaterial)
+            diveSettings.matValue = 1;
+        if (!lockTankEmptyWeight)
+            diveSettings.tankEmptyWeight = 17f;         // kg
+        if (!lockTankStartPressure)
+            diveSettings.tankStartPress = 300;          // bar
+        if (!lockTankCapacity)
+            diveSettings.tankCapacity = 10f;            // liter
+        if (!lockLeadWeights)
+            diveSettings.leadWeights = 4f;              // kg
+        if (!lockBCDWeight)
+            diveSettings.BCD_weight = 3.5f;             // kg
+        if (!lockBCDCapacity)
+            diveSettings.BCD_Capacity = 15f;            // liter
+        if (!lockSuitThickness)
+            diveSettings.suitThickness = 5;             // mm
     }
 }

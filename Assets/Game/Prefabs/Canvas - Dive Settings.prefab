@@ -605,7 +605,7 @@ RectTransform:
   - {fileID: 8192207123255745948}
   - {fileID: 4693995068542274767}
   - {fileID: 3440771597480226595}
-  - {fileID: 7721624248431096357}
+  - {fileID: 13452682880890700}
   m_Father: {fileID: 13452682284031606}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: -25, z: 0}
@@ -2081,11 +2081,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 13452682284031606}
+  - component: {fileID: 13452682284031601}
   - component: {fileID: 13452682284031607}
   - component: {fileID: 13452682284031604}
   - component: {fileID: 13452682284031605}
   - component: {fileID: 13452682284031594}
-  - component: {fileID: 13452682284031601}
   m_Layer: 5
   m_Name: Canvas - Dive Settings
   m_TagString: Untagged
@@ -2115,6 +2115,64 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 1}
   m_SizeDelta: {x: 4, y: 2}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &13452682284031601
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 13452682284031595}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09b06c4939cf5024d84a6d0c9fd6daa1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  diveSettings: {fileID: 11400000, guid: f0c474f114bad4140b303515b0c10c4e, type: 2}
+  diverController: {fileID: 0}
+  lockWaterTemperature: 0
+  predefinedWaterTemperature: 15
+  lockWaterDesnity: 0
+  predefinedWaterDesnity: 1025
+  lockAtmosphericPressure: 0
+  predefinedAtmophericPressure: 1013
+  lockTankMaterial: 0
+  predefinedTankMaterial: 1
+  lockTankEmptyWeight: 0
+  predefinedTankEmptyWeight: 17
+  lockTankStartPressure: 0
+  predefinedTankstartPressure: 300
+  lockTankCapacity: 0
+  predefinedTankCapacity: 10
+  lockLeadWeights: 0
+  predefinedLeadWeights: 4
+  lockBCDWeight: 0
+  predefinedBCDWeight: 3.5
+  lockBCDCapacity: 0
+  predefinedBCDCapacity: 15
+  lockSuitThickness: 0
+  predefinedSuitThickness: 5
+  waterTempValue: {fileID: 13452683254636562}
+  waterTempSlider: {fileID: 13452682586112043}
+  waterDensityValue: {fileID: 13452682541890456}
+  waterDensitySlider: {fileID: 13452682614819570}
+  atmosphericPressureValue: {fileID: 13452682123979043}
+  atmosphericPressureSlider: {fileID: 13452682561327748}
+  suitThicknessValue: {fileID: 13452682070212446}
+  suitThicknessSlider: {fileID: 13452683251383404}
+  leadWeightsValue: {fileID: 1579916936313458658}
+  leadWeightsSlider: {fileID: 8848284128008075231}
+  tankMaterialsDropdown: {fileID: 13452683173183589}
+  tankEmptyWeightValue: {fileID: 13452682593270233}
+  tankEmptyWeightSlider: {fileID: 13452682908415551}
+  tankStartPressValue: {fileID: 13452682566147999}
+  tankStartPressSlider: {fileID: 13452681975177743}
+  tankCapacityValue: {fileID: 13452682129368963}
+  tankCapacitySlider: {fileID: 13452681623431637}
+  BCDWeightValue: {fileID: 4217340905766734427}
+  BCDWeightSlider: {fileID: 2388936716511381998}
+  BCDCapacityValue: {fileID: 1383181370337663497}
+  BCDCapacitySlider: {fileID: 4891011255717791420}
+  defaultsButton: {fileID: 13452682880890703}
 --- !u!223 &13452682284031607
 Canvas:
   m_ObjectHideFlags: 0
@@ -2195,42 +2253,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RaycastTriggerInteraction: 1
---- !u!114 &13452682284031601
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 13452682284031595}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 09b06c4939cf5024d84a6d0c9fd6daa1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  diveSettings: {fileID: 11400000, guid: f0c474f114bad4140b303515b0c10c4e, type: 2}
-  diverController: {fileID: 0}
-  waterTempValue: {fileID: 13452683254636562}
-  waterTempSlider: {fileID: 13452682586112043}
-  waterDensityValue: {fileID: 13452682541890456}
-  waterDensitySlider: {fileID: 13452682614819570}
-  atmosphericPressureValue: {fileID: 13452682123979043}
-  atmosphericPressureSlider: {fileID: 13452682561327748}
-  suitThicknessValue: {fileID: 13452682070212446}
-  suitThicknessSlider: {fileID: 13452683251383404}
-  leadWeightsValue: {fileID: 1579916936313458658}
-  leadWeightsSlider: {fileID: 8848284128008075231}
-  tankMaterialsDropdown: {fileID: 13452683173183589}
-  tankEmptyWeightValue: {fileID: 13452682593270233}
-  tankEmptyWeightSlider: {fileID: 13452682908415551}
-  tankStartPressValue: {fileID: 13452682566147999}
-  tankStartPressSlider: {fileID: 13452681975177743}
-  tankCapacityValue: {fileID: 13452682129368963}
-  tankCapacitySlider: {fileID: 13452681623431637}
-  BCDWeightValue: {fileID: 4217340905766734427}
-  BCDWeightSlider: {fileID: 2388936716511381998}
-  BCDCapacityValue: {fileID: 1383181370337663497}
-  BCDCapacitySlider: {fileID: 4891011255717791420}
-  defaultsButton: {fileID: 13452682880890703}
 --- !u!1 &13452682368785176
 GameObject:
   m_ObjectHideFlags: 0
@@ -4310,18 +4332,18 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 13452682880890701}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 13452681861507664}
-  m_Father: {fileID: 8816394267845091454}
+  m_Father: {fileID: 13452681628130359}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -137.5}
-  m_SizeDelta: {x: -4, y: 40}
+  m_AnchoredPosition: {x: 0, y: -135}
+  m_SizeDelta: {x: -10, y: 41}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &13452682880890697
 CanvasRenderer:
@@ -8363,7 +8385,7 @@ RectTransform:
   - {fileID: 5523650328118874059}
   - {fileID: 3698671996871959106}
   - {fileID: 4588554624823129634}
-  - {fileID: 13452682880890700}
+  - {fileID: 7721624248431096357}
   m_Father: {fileID: 13452682284031606}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 25, z: 0}
@@ -11061,7 +11083,7 @@ RectTransform:
   - {fileID: 13452683202479403}
   - {fileID: 13452682070212447}
   - {fileID: 13452683251383405}
-  m_Father: {fileID: 13452681628130359}
+  m_Father: {fileID: 8816394267845091454}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
