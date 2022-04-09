@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 4691648e80dac4d4eaa74c5b85a1de24
+guid: 2b0dac2862f4cb24c9461d8a57deba31
 ModelImporter:
   serializedVersion: 20200
   internalIDToNameTable: []
@@ -7,17 +7,17 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Aluminum - Anodized Rough (Blue)
-    second: {fileID: 2100000, guid: d600a951244205347b4ad630a049ae9f, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Aluminum - Polished
+      name: Buttons
     second: {fileID: 2100000, guid: 0a8cc0c3a5f841a47b15bb9a4c391ffa, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Plastic - Glossy (Black)
+      name: Frame
+    second: {fileID: 2100000, guid: d600a951244205347b4ad630a049ae9f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Inner
     second: {fileID: 2100000, guid: 7500df7c7e3a3a6418fa065688724ad8, type: 2}
   materials:
     materialImportMode: 2
