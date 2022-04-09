@@ -14,10 +14,10 @@ public class DiveSettings : ScriptableObject {
 
 
     [field: Header("Player Values")]
-    [Range(100, 250)] public float diverHeight = 180;        // cm
-    [Range(20, 200)] public float diverWeight = 80;          // kg
-    [Range(10, 20)] public float RMV = 15f;                  // Respiratory minute volume
-    [Range(1, 10)] public float suitThickness = 5;           // mm
+    [Range(100, 250)] public float diverHeight = 180f;        // cm
+    [Range(20, 200)] public float diverWeight = 80f;          // kg
+    [Range(10, 20)] public float RMV = 15f;                   // Respiratory minute volume
+    [Range(1, 10)] public float suitThickness = 5f;           // mm
 
     public enum tankMaterials { Aluminium, Steel };
     public tankMaterials tankMaterial = tankMaterials.Steel;  // Aluminium or Steel

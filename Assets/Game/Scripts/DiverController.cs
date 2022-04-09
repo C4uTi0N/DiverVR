@@ -98,6 +98,7 @@ public class DiverController : MonoBehaviour
         _rb.constraints = RigidbodyConstraints.FreezeRotation;
         diveSettings._waterSurface = _waterBody.position.y - 1f;
         _rb.mass = diveSettings.diverWeight;
+        _rb.useGravity = false;
 
         // Initial values.
         breathCooldown /= breathsPerMin;

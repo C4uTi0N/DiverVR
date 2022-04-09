@@ -128,7 +128,7 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0.05
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
@@ -1066,7 +1066,7 @@ PrefabInstance:
     - target: {fileID: 2068573134586097954, guid: ac60703f272994b41bb761b68813837e, type: 3}
       propertyPath: m_Camera
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1544424841009006160}
     - target: {fileID: 2068573135088322593, guid: ac60703f272994b41bb761b68813837e, type: 3}
       propertyPath: m_Camera
       value: 
@@ -1593,7 +1593,7 @@ PrefabInstance:
     - target: {fileID: 8771054941502296749, guid: 3c8c91bd911584746906359debf69ccf, type: 3}
       propertyPath: m_Camera
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1544424841009006160}
     - target: {fileID: 9093808346918779910, guid: 3c8c91bd911584746906359debf69ccf, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -2560,7 +2560,7 @@ PrefabInstance:
     - target: {fileID: 6169362948888292464, guid: 81eb8a07f64251845bbe5c9a2ef66920, type: 3}
       propertyPath: m_Camera
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1544424841009006160}
     - target: {fileID: 6169362949388490098, guid: 81eb8a07f64251845bbe5c9a2ef66920, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 0
@@ -2599,7 +2599,7 @@ PrefabInstance:
     - target: {fileID: 8771054941502296749, guid: 3c8c91bd911584746906359debf69ccf, type: 3}
       propertyPath: m_Camera
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1544424841009006160}
     - target: {fileID: 9093808346918779910, guid: 3c8c91bd911584746906359debf69ccf, type: 3}
       propertyPath: m_RootOrder
       value: 0
