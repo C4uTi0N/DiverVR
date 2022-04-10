@@ -850,7 +850,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8844228643819139542, guid: 0664066774797d44284cf125b4b8d852, type: 3}
       propertyPath: m_PresetInfoIsWorld
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8844228643819139543, guid: 0664066774797d44284cf125b4b8d852, type: 3}
       propertyPath: m_Camera
@@ -1617,6 +1617,18 @@ PrefabInstance:
       propertyPath: diverController
       value: 
       objectReference: {fileID: 1010717768}
+    - target: {fileID: 13452682284031601, guid: 684b1a233d4199340aecbe3899aa2077, type: 3}
+      propertyPath: lockWaterDesnity
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 13452682284031601, guid: 684b1a233d4199340aecbe3899aa2077, type: 3}
+      propertyPath: lockWaterTemperature
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 13452682284031601, guid: 684b1a233d4199340aecbe3899aa2077, type: 3}
+      propertyPath: lockAtmosphericPressure
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 13452682284031606, guid: 684b1a233d4199340aecbe3899aa2077, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
