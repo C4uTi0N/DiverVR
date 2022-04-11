@@ -195,7 +195,7 @@ public class DiveSettingsManager : MonoBehaviour
 
     public void ApplyDefaultValues()
     {
-        diveSettings._waterSurface = 0f;            // y-height of the water surface
+        diveSettings._waterSurfaceOffset = 0f;            // y-height of the water surface
         if (!lockWaterTemperature)
             diveSettings.waterTemp = 15f;               // Celcius
         if (!lockWaterDesnity)

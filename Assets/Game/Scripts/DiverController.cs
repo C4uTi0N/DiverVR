@@ -73,6 +73,7 @@ public class DiverController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI timeAtDepthValue;
     [SerializeField] private TextMeshProUGUI depthValue;
     [SerializeField] private TextMeshProUGUI netBuoyancyValue;
+    [SerializeField] private TextMeshProUGUI BCD_AirVolValue;
 
 
     #region Controller Actions
@@ -96,7 +97,7 @@ public class DiverController : MonoBehaviour
     {
         _rb = GetComponent<Rigidbody>();
         _rb.constraints = RigidbodyConstraints.FreezeRotation;
-        diveSettings._waterSurface = _waterBody.position.y - 1f;
+        diveSettings._waterSurfaceOffset = _waterBody.position.y;
         _rb.mass = diveSettings.diverWeight;
         _rb.useGravity = false;
 
@@ -119,7 +120,8 @@ public class DiverController : MonoBehaviour
         }
 
         // Submergence controls the beginning of the dive.
-        submergence = CalcSubmergence(_VRCamera.gameObject);    // Degree of submergence.
+        submergence = PlayerSubmergence(_VRCamera.gameObject);    // Degree of submergence.
+        Debug.Log("Submergence: " + submergence);
         if (submergence > 0) {
             diveGoingOn = true;        // Dummy variable (i.e could be set with UI button)
         }
@@ -135,7 +137,7 @@ public class DiverController : MonoBehaviour
         }
 
         // Allowing swim movement if more than half submerged.
-        if (submergence > 0.5f) SwimMovement();
+        //if (submergence > 0.5f) SwimMovement();
         
         // Taking a breath.
         if (breathTimer > breathCooldown) {
@@ -205,6 +207,8 @@ public class DiverController : MonoBehaviour
 
         netBuoyancyValue.text = netBuoyancy.ToString();
 
+        BCD_AirVolValue.text = BCDOldBoyleVol.ToString();
+
         /*
         Debug.Log("Time: " + timeStr);
         Debug.Log("Dive time: " + diveTimeStr);
@@ -261,7 +265,7 @@ public class DiverController : MonoBehaviour
     // Returns mass of gas used during a stop.
     float StopGasMass(float stopDuration, float depth) {
         float breathCount = stopDuration * breathsPerMin;
-        float breathVol = (diveSettings.RMV / breathsPerMin) * PressureAtDepth(diveSettings._waterSurface - depth) / 1000f;
+        float breathVol = (diveSettings.RMV / breathsPerMin) * PressureAtDepth(diveSettings._waterSurfaceOffset - depth) / 1000f;
         float stopGasMass = GasMassAtSurfacePress(breathVol) * breathCount;
         return stopGasMass;
     }
@@ -299,17 +303,17 @@ public class DiverController : MonoBehaviour
 
 
     // Submergence is calculated relative to VR-Camera position (yPos).
-    float CalcSubmergence(GameObject obj)
+    float PlayerSubmergence(GameObject player)
     {
         float faceAboveWater = 0.1f;
         float faceHeight = 0.3f;
-        float yPos = obj.transform.position.y;
+        float yPos = player.transform.position.y;
 
-        if (yPos > diveSettings._waterSurface + faceHeight + faceAboveWater + 0.1f) return 0f;
-        else if (yPos >= diveSettings._waterSurface + faceAboveWater &&
-                 yPos <= diveSettings._waterSurface + faceAboveWater + faceHeight)
+        if (yPos > diveSettings._waterSurfaceOffset + faceHeight + faceAboveWater + 0.1f) return 0f;
+        else if (yPos >= diveSettings._waterSurfaceOffset + faceAboveWater &&
+                 yPos <= diveSettings._waterSurfaceOffset + faceAboveWater + faceHeight)
             // Linear falloff of submergence y = ax + b
-            return (-1f/faceHeight) * yPos + (1f + (diveSettings._waterSurface + faceAboveWater) / faceHeight);
+            return (-1f/faceHeight) * yPos + (1f + (diveSettings._waterSurfaceOffset + faceAboveWater) / faceHeight);
         else return 1f;
     }
 
@@ -520,8 +524,8 @@ public class DiverController : MonoBehaviour
             InitDive();
         }
         // Dive is going on
-        if (yPos >= diveSettings._waterSurface) return 0;    // We don't want a depth above the water surface.
-        return Mathf.Abs(yPos) + diveSettings._waterSurface;                 // m, positive number.
+        if (yPos >= diveSettings._waterSurfaceOffset) return 0;    // We don't want a depth above the water surface.
+        return Mathf.Abs(yPos) + diveSettings._waterSurfaceOffset;                 // m, positive number.
     }
 
 
@@ -541,7 +545,22 @@ public class DiverController : MonoBehaviour
     {
         _strokeCooldown += Time.fixedDeltaTime;
 
-        // Diver can swim if these conditions are met:
+        // Vertical movement (simulated use of legs) (with left controller y(up) and x(down) buttons)
+        // ==========================================================================================
+        if (leftControllerSecondaryButton.action.IsPressed())
+        {
+            Vector3 worldVel = _XROrigin.TransformDirection(Vector3.up);
+            _rb.AddForce(worldVel * swimForce * 0.25f, ForceMode.Acceleration);
+        }
+        if (leftControllerPrimaryButton.action.IsPressed())
+        {
+            Vector3 worldVel = _XROrigin.TransformDirection(-1 * Vector3.up);
+            _rb.AddForce(worldVel * swimForce * 0.25f, ForceMode.Acceleration);
+        }
+
+        // Movement (swimming) with hands; with left & right controllers movement.
+        // Grip button has to be pressed when 'pulling' the controller.
+        // =======================================================================
         if (_strokeCooldown > minStrokeInterval &&
             (leftControllerGripPress.action.IsPressed() || rightControllerGripPress.action.IsPressed())
            )

@@ -7,7 +7,10 @@ public class DiveSettings : ScriptableObject {
 
     [field: Header("Environment Values")]
     [SerializeField] public float gravity { get; private set; } = 9.82f;    // Gravitational constant
-    public float _waterSurface = 0f;                                        // y-height of the water surface
+
+    [Tooltip("Defining the y-position of the water surface, relative to the y-position of the gameobject _waterBody (gameobject ref. on script on PlayerRig)")]
+    public float _waterSurfaceOffset = 0f;
+    
     [Range(-5, 40)] public float waterTemp = 15f;                           // Celcius
     [Range(1000f, 1040f)] public float waterDensity = 1025f;                // Kg/m3
     [Range(850, 1100)] public float atmosphericPressure = 1013f;            // Air pressure in hPa (same as millibar)
