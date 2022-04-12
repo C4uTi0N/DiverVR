@@ -16,15 +16,15 @@ public class DiveSettingsManager : MonoBehaviour
     [SerializeField] private bool lockAtmosphericPressure = false;
     [SerializeField, Range(850f, 1100f)] private float predefinedAtmophericPressure = 1013f;
     [SerializeField] private bool lockTankMaterial = false;
-    [SerializeField, Range(0, 1)] private int predefinedTankMaterial = 1;
+    [SerializeField, Range(0, 1)] private int predefinedTankMaterial = 0;
     [SerializeField] private bool lockTankEmptyWeight = false;
-    [SerializeField, Range(3f, 30f)] private float predefinedTankEmptyWeight = 17f;
+    [SerializeField, Range(3f, 30f)] private float predefinedTankEmptyWeight = 12f;
     [SerializeField] private bool lockTankStartPressure = false;
     [SerializeField, Range(100f, 500f)] private float predefinedTankstartPressure = 300f;
     [SerializeField] private bool lockTankCapacity = false;
     [SerializeField, Range(3f, 20f)] private float predefinedTankCapacity = 10f;
     [SerializeField] private bool lockLeadWeights = false;
-    [SerializeField, Range(1f, 50f)] private float predefinedLeadWeights = 4f;
+    [SerializeField, Range(0f, 50f)] private float predefinedLeadWeights = 4f;
     [SerializeField] private bool lockBCDWeight = false;
     [SerializeField, Range(1f, 6f)] private float predefinedBCDWeight = 3.5f;
     [SerializeField] private bool lockBCDCapacity = false;
@@ -171,11 +171,12 @@ public class DiveSettingsManager : MonoBehaviour
         });
         tankStartPressSlider.onValueChanged.AddListener((val) => {
             diveSettings.tankStartPress = val;
-            diverController.RefillTank(); // Have to recalculate gasRemainingMass.
+            diverController.InitDive(); // Have to recalculate gasRemainingMass.
             tankStartPressValue.text = val.ToString();
         });
         tankCapacitySlider.onValueChanged.AddListener((val) => {
             diveSettings.tankCapacity = val;
+            diverController.InitDive(); // Have to recalculate gasRemainingMass.
             tankCapacityValue.text = val.ToString("0.0");
         });
         leadWeightsSlider.onValueChanged.AddListener((val) => {
@@ -197,7 +198,6 @@ public class DiveSettingsManager : MonoBehaviour
 
     public void ApplyDefaultValues()
     {
-        diveSettings._waterSurfaceOffset = 0f;          // y-height of the water surface
         if (!lockWaterTemperature)
             diveSettings.waterTemp = 15f;               // Celcius
         if (!lockWaterDesnity)
@@ -206,9 +206,9 @@ public class DiveSettingsManager : MonoBehaviour
             diveSettings.atmosphericPressure = 1013f;   // Air pressure in hPa (same as millibar)
 
         if (!lockTankMaterial)
-            diveSettings.matValue = 1;
+            diveSettings.matValue = 0;
         if (!lockTankEmptyWeight)
-            diveSettings.tankEmptyWeight = 17f;         // kg
+            diveSettings.tankEmptyWeight = 12f;         // kg
         if (!lockTankStartPressure)
             diveSettings.tankStartPress = 300;          // bar
         if (!lockTankCapacity)

@@ -2087,7 +2087,7 @@ GameObject:
   - component: {fileID: 13452682284031605}
   - component: {fileID: 13452682284031594}
   m_Layer: 5
-  m_Name: Canvas - Dive Settings
+  m_Name: Canvas - Dive Settings_OLD
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
