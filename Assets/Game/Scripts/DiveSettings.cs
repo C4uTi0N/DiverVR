@@ -6,7 +6,6 @@ using UnityEngine;
 public class DiveSettings : ScriptableObject {
 
     [field: Header("Environment Values")]
-    [SerializeField] public float gravity { get; private set; } = 9.82f;    // Gravitational constant
 
     [Tooltip("Defining the y-position of the water surface, relative to the y-position of the gameobject _waterBody (gameobject ref. on script on PlayerRig)")]
     public float _waterSurfaceOffset = 0f;

@@ -176,26 +176,28 @@ public class DiveSettingsManager : MonoBehaviour
         });
         tankCapacitySlider.onValueChanged.AddListener((val) => {
             diveSettings.tankCapacity = val;
-            tankCapacityValue.text = val.ToString();
+            tankCapacityValue.text = val.ToString("0.0");
         });
         leadWeightsSlider.onValueChanged.AddListener((val) => {
             diveSettings.leadWeights = val;
-            leadWeightsValue.text = val.ToString();
+            leadWeightsValue.text = val.ToString("0.0");
         });
         BCDWeightSlider.onValueChanged.AddListener((val) => {
             diveSettings.BCD_weight = val;
-            BCDWeightValue.text = val.ToString();
+            BCDWeightValue.text = val.ToString("0.0");
         });
         BCDCapacitySlider.onValueChanged.AddListener((val) => {
             diveSettings.BCD_Capacity = val;
             BCDCapacityValue.text = val.ToString();
         });
-        defaultsButton.onClick.AddListener(() => ApplyDefaultValues());
+        defaultsButton.onClick.AddListener(ApplyDefaultValues);
     }
+
+
 
     public void ApplyDefaultValues()
     {
-        diveSettings._waterSurfaceOffset = 0f;            // y-height of the water surface
+        diveSettings._waterSurfaceOffset = 0f;          // y-height of the water surface
         if (!lockWaterTemperature)
             diveSettings.waterTemp = 15f;               // Celcius
         if (!lockWaterDesnity)
@@ -219,5 +221,7 @@ public class DiveSettingsManager : MonoBehaviour
             diveSettings.BCD_Capacity = 15f;            // liter
         if (!lockSuitThickness)
             diveSettings.suitThickness = 5;             // mm
+        SetUIValueues();
+        PredefineSliderValues();
     }
 }

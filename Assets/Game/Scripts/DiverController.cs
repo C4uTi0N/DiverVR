@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
 using UnityEngine.InputSystem;
 
@@ -10,6 +9,8 @@ using UnityEngine.InputSystem;
 public class DiverController : MonoBehaviour
 {
     public DiveSettings diveSettings;
+
+    private float g = 9.82f;    // Gravitational constant
 
     [Header("Swimming Variables")]
     public float swimForce = 2f;           // Force of strokes
@@ -40,7 +41,7 @@ public class DiverController : MonoBehaviour
 
     // User data variables
     bool diveGoingOn = false;               // Has the dive begun?
-    float userDataCooldown = 1f;            // s, Update frequecy of user data.
+    float userDataCooldown = 0.25f;            // s, Update frequecy of user data.
     float userDataUpdTimer = 0;
     //
     float time;                             // hh:mm:ss, current local time
@@ -121,14 +122,12 @@ public class DiverController : MonoBehaviour
 
         // Submergence controls the beginning of the dive.
         submergence = PlayerSubmergence(_VRCamera.gameObject);    // Degree of submergence.
-        Debug.Log("Submergence: " + submergence);
         if (submergence > 0) {
             diveGoingOn = true;        // Dummy variable (i.e could be set with UI button)
         }
 
         // Updating water drag and buoyancy if user is in the water.
-        if (submergence > 0f)
-        {
+        if (submergence > 0f) {
             Drag(_rb, submergence);
             netBuoyancy += BodyBuoyancy(_rb, submergence);
             netBuoyancy += SuitBuoyancy(submergence);
@@ -137,7 +136,7 @@ public class DiverController : MonoBehaviour
         }
 
         // Allowing swim movement if more than half submerged.
-        //if (submergence > 0.5f) SwimMovement();
+        if (submergence > 0.5f) SwimMovement();
         
         // Taking a breath.
         if (breathTimer > breathCooldown) {
@@ -205,9 +204,9 @@ public class DiverController : MonoBehaviour
         timeAtDepthStr = ts2.ToString(@"hh\hmm\mss\s");
         timeAtDepthValue.text = timeAtDepthStr;
 
-        netBuoyancyValue.text = netBuoyancy.ToString();
+        netBuoyancyValue.text = (netBuoyancy/g).ToString("0.00") + " kg";
 
-        BCD_AirVolValue.text = BCDOldBoyleVol.ToString();
+        BCD_AirVolValue.text = BCDOldBoyleVol.ToString("0.00") + " ltr";
 
         /*
         Debug.Log("Time: " + timeStr);
@@ -245,7 +244,7 @@ public class DiverController : MonoBehaviour
         float avgSurfacingDepth = depth / 2f;                                           // m, The average depth during ascent.
         float swimMinsToSurface = depth / ascentMaxMtrPerMin;                           // minutes, Minimum time to surface, excluding safety stop.
         float breathCount = swimMinsToSurface * breathsPerMin;                          // Number of breaths to surface, excluding safety stop.
-        float avgBars = PressureAtDepth(_VRCamera.position.y / 2f) / 1000f;  // bar, Pressure at average surfacing depth.
+        float avgBars = PressureAtDepth(_VRCamera.position.y / 2f) / 1000f;             // bar, Pressure at average surfacing depth.
         float breathVol = (diveSettings.RMV / breathsPerMin) * avgBars;
         float ascentGasMass = GasMassAtSurfacePress(breathVol) * breathCount;           // kg, Total mass of ascent air.
 
@@ -295,7 +294,7 @@ public class DiverController : MonoBehaviour
     // which is also calculated using Newtons 2nd law and Archimedes principle
     float ApplyGravity(Rigidbody rb)
     {
-        float force = -diveSettings.gravity * rb.mass;
+        float force = -g * rb.mass;
         Vector3 gravityForce = new Vector3(0f, force, 0f);
         _rb.AddForce(gravityForce, ForceMode.Force);
         return force;
@@ -322,7 +321,7 @@ public class DiverController : MonoBehaviour
     float BodyBuoyancy(Rigidbody rb, float submergence)
     {
         float m = rb.mass;
-        float buoyancy = m * diveSettings.gravity * submergence;
+        float buoyancy = m * g * submergence;
         Vector3 buoyancyForce = new Vector3(0f, buoyancy, 0f);
         rb.AddForce(buoyancyForce, ForceMode.Force);
         return buoyancy;
@@ -341,9 +340,9 @@ public class DiverController : MonoBehaviour
         float suitMass = _neopreneFoamDensity * suitSurfaceVolume;   // Will be in kg (reducing buoyancy by this, instead of increasing gravity force)
 
         float suitNewVolume = BoyleVolAtDepth(_VRCamera.gameObject, suitSurfaceVolume);
-        float buoyancy = ((diveSettings.waterDensity /1000f) * suitNewVolume - suitMass) * diveSettings.gravity * submergence;   // Force in Newton.
+        float buoyancy = ((diveSettings.waterDensity /1000f) * suitNewVolume - suitMass) * g * submergence;   // Force in Newton.
 
-        Vector3 buoyancyForce = new Vector3(0f, buoyancy, 0f);                                  // Force vector.
+        Vector3 buoyancyForce = new Vector3(0f, buoyancy, 0f);       // Force vector.
         _rb.AddForce(buoyancyForce, ForceMode.Force);
         return buoyancy;
     }
@@ -367,7 +366,7 @@ public class DiverController : MonoBehaviour
         float BCD_BoyleVolume = BoyleVolAtDepth(_VRCamera.gameObject, BCDSurfAirVol);
         BCDOldBoyleVol = BCD_BoyleVolume;
 
-        float buoyancy = ((diveSettings.waterDensity /1000f) * BCD_BoyleVolume - diveSettings.BCD_weight) * diveSettings.gravity * submergence;
+        float buoyancy = ((diveSettings.waterDensity /1000f) * BCD_BoyleVolume - diveSettings.BCD_weight) * g * submergence;
 
         Vector3 buoyancyForce = new Vector3(0f, buoyancy, 0f);
         _rb.AddForce(buoyancyForce, ForceMode.Force);
@@ -378,13 +377,13 @@ public class DiverController : MonoBehaviour
     // Water 'net' lift of divers tank.
     float TankBuoyancy(float submergence) {
 
-        float tankWaterDisp = TankWaterDisp(diveSettings.tankCapacity);              // Volume of displaced water.
-        float buoyancy = ( (diveSettings.waterDensity / 1000f) * tankWaterDisp  -    // Mass of displaced water.
-                           (diveSettings.tankEmptyWeight + gasRemainingMass)         // Mass of tank and its remaining gas.
-                         ) * diveSettings.gravity * submergence;                           // = Buoyancy in Newton.
+        float tankWaterDisp = TankWaterDisp(diveSettings.tankCapacity);             // Volume of displaced water.
+        float buoyancy = ( (diveSettings.waterDensity / 1000f) * tankWaterDisp  -   // Mass of displaced water.
+                           (diveSettings.tankEmptyWeight + gasRemainingMass)        // Mass of tank and its remaining gas.
+                         ) * g * submergence;                                       // = Buoyancy in Newton.
 
-        Vector3 buoyancyForce = new Vector3(0f, buoyancy, 0f);          // Force vector.
-        _rb.AddForce(buoyancyForce, ForceMode.Force);                   // Applying force.
+        Vector3 buoyancyForce = new Vector3(0f, buoyancy, 0f);                      // Force vector.
+        _rb.AddForce(buoyancyForce, ForceMode.Force);                               // Applying force.
         return buoyancy;
     }
 
@@ -392,7 +391,7 @@ public class DiverController : MonoBehaviour
     // Calculating drag coefficient by the formula:  d = 1/2 * d * v^2 * A * Cd
     void Drag(Rigidbody rb, float submergence)
     {
-        float density = diveSettings.waterDensity;                   // Kg/m3. Salt water is denser than fresh water.
+        float density = diveSettings.waterDensity;      // Kg/m3. Salt water is denser than fresh water.
         float speedSqr = rb.velocity.sqrMagnitude;      // speed squared, of object relative to medium.
         const float area = 0.25f;                       // m2, cross-sectional area of moving obj, orthogonal to direction of motion.
         const float dragCoeff = 0.7f;                   // Higher -> less aerodynamic
@@ -405,7 +404,7 @@ public class DiverController : MonoBehaviour
         float Iaft = Ibef - deltaI;
 
         float speedRatio = Iaft / Ibef;
-        rb.velocity *= speedRatio;
+        if (speedRatio > 0) rb.velocity *= speedRatio;
     }
 
 
@@ -449,11 +448,11 @@ public class DiverController : MonoBehaviour
     // Using the equation for an ideal gas to calculate density.
     float GasDensity(float pressureInBar)
     {
-        const float MM_air = 29f;               // Molar mass of atmospheric air.
-        float P = BarToPascal(pressureInBar);   // Pressure in Pascal
-        const float R = 8314.46f;               // Ideal gas constant.
-        float T = 273.15f + diveSettings.waterTemp;          // Water temperature in Kelvin
-        float density = (MM_air * P) / (R * T); // Formula derived from ideal gas equation
+        const float MM_air = 29f;                       // Molar mass of atmospheric air.
+        float P = BarToPascal(pressureInBar);           // Pressure in Pascal
+        const float R = 8314.46f;                       // Ideal gas constant.
+        float T = 273.15f + diveSettings.waterTemp;     // Water temperature in Kelvin
+        float density = (MM_air * P) / (R * T);         // Formula derived from ideal gas equation
         return density;
     }
 
@@ -475,9 +474,9 @@ public class DiverController : MonoBehaviour
     float TankPressure(float remainingGasMassInKg) {
         float m = remainingGasMassInKg;
         const float R = 8314.46f;                           // Ideal gas constant.
-        float T = 273.15f + diveSettings.waterTemp;                      // Kelvin, Water temperature.
+        float T = 273.15f + diveSettings.waterTemp;         // Kelvin, Water temperature.
 
-        float V = diveSettings.tankCapacity / 1000f;                     // m3, tank capatity.
+        float V = diveSettings.tankCapacity / 1000f;        // m3, tank capatity.
         const float MM_air = 29f;                           // Molar mass of atmospheric air.
 
         float P = (m * R * T) / (V * MM_air);
@@ -524,17 +523,17 @@ public class DiverController : MonoBehaviour
             InitDive();
         }
         // Dive is going on
-        if (yPos >= diveSettings._waterSurfaceOffset) return 0;    // We don't want a depth above the water surface.
-        return Mathf.Abs(yPos) + diveSettings._waterSurfaceOffset;                 // m, positive number.
+        if (yPos >= diveSettings._waterSurfaceOffset) return 0;         // We don't want a depth above the water surface.
+        return Mathf.Abs(yPos) + diveSettings._waterSurfaceOffset;      // m, positive number.
     }
 
 
     // Pressure of water pillar.
     float PressureAtDepth(float yPos) {
 
-        float pressure = Depth(yPos) * diveSettings.waterDensity * diveSettings.gravity;    // In pascal.
-        pressure /= 100f;                                   // In hPa (same as mBar).
-        pressure += diveSettings.atmosphericPressure;                     // In hPa (same as mBar).
+        float pressure = Depth(yPos) * diveSettings.waterDensity * g;    // In pascal.
+        pressure /= 100f;                                                // In hPa (same as mBar).
+        pressure += diveSettings.atmosphericPressure;                    // In hPa (same as mBar).
         return pressure;
     }
     // =================================================================================
@@ -550,12 +549,12 @@ public class DiverController : MonoBehaviour
         if (leftControllerSecondaryButton.action.IsPressed())
         {
             Vector3 worldVel = _XROrigin.TransformDirection(Vector3.up);
-            _rb.AddForce(worldVel * swimForce * 0.25f, ForceMode.Acceleration);
+            _rb.AddForce(worldVel * swimForce * 0.3f, ForceMode.Acceleration);
         }
         if (leftControllerPrimaryButton.action.IsPressed())
         {
             Vector3 worldVel = _XROrigin.TransformDirection(-1 * Vector3.up);
-            _rb.AddForce(worldVel * swimForce * 0.25f, ForceMode.Acceleration);
+            _rb.AddForce(worldVel * swimForce * 0.3f, ForceMode.Acceleration);
         }
 
         // Movement (swimming) with hands; with left & right controllers movement.
