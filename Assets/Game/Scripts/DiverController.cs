@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using TMPro;
 using UnityEngine.InputSystem;
@@ -44,26 +45,31 @@ public class DiverController : MonoBehaviour
     bool diveGoingOn = false;               // Has the dive begun?
     float userDataCooldown = 0.25f;            // s, Update frequecy of user data.
     float userDataUpdTimer = 0;
+
     //
+    float previousDepth;                    // depth one second ago
     float time;                             // hh:mm:ss, current local time
     float diveTime = 0;                     // s, Time elapsed since the dive began.
     float depth;                            // m, current diver depth
+    int maxDepth;                           // m, max depth reached
     float tankPress;                        // bar, current pressure in tank
     float timeAtDepth;                      // s, The time left at current depth, (with time to surface subtracted).
-                                            /* Note: the above is not NDL (No Decompression Limit)*/
+    #endregion                              // Note: the above is not NDL (No Decompression Limit)
+
     //
-    string timeStr;
-    string diveTimeStr    = "00h00m00s";
-    string depthStr;
-    string tankPressStr;
-    string timeAtDepthStr = "00h00m00s";
-    #endregion
+    public string timeStr;
+    public string diveTimeStr    = "00h00m00s";
+    public string depthStr;
+    public string tankPressStr;
+    public string timeAtDepthStr = "00h00m00s";
+    public string maxDepthStr;
+    public float ascentRate;
 
 
     [Header("Object References")]
+    public Transform _waterBody;                        // Gameobject holding our water
     [SerializeField] private Transform _XROrigin;       // Root Object of Player- or XR-Rig
     [SerializeField] private Transform _VRCamera;       // player Camera
-    [SerializeField] private Transform _waterBody;      // Gameobject holding our water
     Rigidbody _rb;                                      // Note: divers rb is offset to (0,1,0)
 
 
@@ -121,6 +127,7 @@ public class DiverController : MonoBehaviour
         else if (diveGoingOn) {
             diveGoingOn = false;
             InitDive();
+            StartCoroutine(CalculateAscentRate(Depth(_VRCamera.position.y)));
         }
 
         // Updating timers.
@@ -189,6 +196,19 @@ public class DiverController : MonoBehaviour
         gasRemainingMass = gasStartMass;
     }
 
+    IEnumerator CalculateAscentRate(float currentDepth)
+    {
+        while (diveGoingOn)
+        {
+            previousDepth = currentDepth;
+            yield return new WaitForSeconds(1);
+
+            ascentRate = (currentDepth - previousDepth) / 60;
+            if (ascentRate < 0) ascentRate = 0;
+
+        }
+
+    }
 
     // Entry point for updating UI (panel on diving watch, etc.)
     // To be adjusted with data as needed.
@@ -196,16 +216,20 @@ public class DiverController : MonoBehaviour
         // Time
         timeStr = DateTime.Now.ToString("HH:mm:ss");
         localTimeValue.text = timeStr; 
+
         // Dive time
         TimeSpan ts1 = TimeSpan.FromSeconds(diveTime);
         diveTimeStr = ts1.ToString(@"hh\hmm\mss\s");
         diveDurationValue.text = diveTimeStr;
+
         // Depth
         depthStr = Depth(_VRCamera.position.y).ToString("0.0") + " m";
         depthValue.text = depthStr;
+
         // Tank pressure
         tankPressStr = tankPress.ToString("0.0") + " bar";
         tankPressureValue.text = tankPressStr;
+
         // Time left at depth
         TimeSpan ts2 = TimeSpan.FromSeconds(timeAtDepth);
         timeAtDepthStr = ts2.ToString(@"hh\hmm\mss\s");
@@ -214,6 +238,15 @@ public class DiverController : MonoBehaviour
         netBuoyancyValue.text = (buoyancy/g).ToString("0.00") + " kg";
 
         BCD_AirVolValue.text = BCDOldBoyleVol.ToString("0.00") + " ltr";
+
+        // Max depth dived
+        if (maxDepth < depth)
+        {
+            maxDepth = Mathf.RoundToInt(depth);
+        }
+        maxDepthStr = maxDepth.ToString();
+
+
 
         /*
         Debug.Log("Time: " + timeStr);
@@ -548,12 +581,12 @@ public class DiverController : MonoBehaviour
             InitDive();
         }
         */
-        
 
         if (yPos >= _waterSurface) return 0;         // We don't want a depth above the water surface.
         return Mathf.Abs(_waterSurface - yPos);      // m, positive number.
     }
 
+    
 
     // Pressure of water pillar.
     float PressureAtDepth(float yPos) {
