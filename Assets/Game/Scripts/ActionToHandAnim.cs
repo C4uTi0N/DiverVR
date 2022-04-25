@@ -12,8 +12,8 @@ public class ActionToHandAnim : ActionToControl
     [Tooltip("Name of animation paramater (case sensitive!)")]
     public string floatParameter;
 
-    [Range(0f, 10f)]
-    public float transitionSpeed = 10;
+    [Range(0f, 20f)]
+    public float transitionSpeed = 20;
     private float currentValue;
     private float targetValue;
 

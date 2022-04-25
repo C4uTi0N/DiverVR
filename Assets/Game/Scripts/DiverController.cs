@@ -49,7 +49,7 @@ public class DiverController : MonoBehaviour
     //
     float previousDepth;                    // depth one second ago
     float time;                             // hh:mm:ss, current local time
-    float diveTime = 0;                     // s, Time elapsed since the dive began.
+    float diveTime;                         // s, Time elapsed since the dive began.
     float depth;                            // m, current diver depth
     int maxDepth;                           // m, max depth reached
     float tankPress;                        // bar, current pressure in tank
@@ -58,10 +58,10 @@ public class DiverController : MonoBehaviour
 
     //
     public string timeStr;
-    public string diveTimeStr    = "00h00m00s";
+    public string diveTimeStr    = "00h00m";
     public string depthStr;
     public string tankPressStr;
-    public string timeAtDepthStr = "00h00m00s";
+    public string timeAtDepthStr = "00h00m";
     public string maxDepthStr;
     public float ascentRate;
 
@@ -74,7 +74,6 @@ public class DiverController : MonoBehaviour
 
 
     [Header("Dive Watch UI Elements")]
-    [SerializeField] private GameObject diveWatch;
     [SerializeField] private TextMeshProUGUI localTimeValue;
     [SerializeField] private TextMeshProUGUI diveDurationValue;
     [SerializeField] private TextMeshProUGUI tankPressureValue;
@@ -123,11 +122,16 @@ public class DiverController : MonoBehaviour
         // Submergence controls the beginning of the dive.
         submergence = PlayerSubmergence(_VRCamera.gameObject);    // Degree of submergence.
 
-        if (submergence > 0) diveGoingOn = true;        // Dummy variable (i.e could be set with UI button)
-        else if (diveGoingOn) {
+        if (submergence > 0)
+        { 
+            diveGoingOn = true;                     // Dummy variable (i.e could be set with UI button)
+            Debug.Log("diveGoinOn = true"); 
+        }        
+        else if (diveGoingOn)
+        {
             diveGoingOn = false;
+            Debug.Log("diveGoinOn = false");
             InitDive();
-            StartCoroutine(CalculateAscentRate(Depth(_VRCamera.position.y)));
         }
 
         // Updating timers.
@@ -174,6 +178,7 @@ public class DiverController : MonoBehaviour
             timeAtDepth = TimeAtDepth(gasToUseMass);
             // ============================================
 
+            CalculateAscentRate(Depth(_VRCamera.position.y));
             UpdateUserData();
         }
     }
@@ -196,34 +201,27 @@ public class DiverController : MonoBehaviour
         gasRemainingMass = gasStartMass;
     }
 
-    IEnumerator CalculateAscentRate(float currentDepth)
+    void CalculateAscentRate(float currentDepth)
     {
-        while (diveGoingOn)
-        {
-            previousDepth = currentDepth;
-            yield return new WaitForSeconds(1);
-
-            ascentRate = (currentDepth - previousDepth) / 60;
-            if (ascentRate < 0) ascentRate = 0;
-
-        }
-
+        previousDepth = currentDepth;
+        ascentRate = (currentDepth - previousDepth) / 60;
+        if (ascentRate < 0) ascentRate = 0;
     }
 
     // Entry point for updating UI (panel on diving watch, etc.)
     // To be adjusted with data as needed.
     void UpdateUserData() {
         // Time
-        timeStr = DateTime.Now.ToString("HH:mm:ss");
+        timeStr = DateTime.Now.ToString("HH:mm");
         localTimeValue.text = timeStr; 
 
         // Dive time
         TimeSpan ts1 = TimeSpan.FromSeconds(diveTime);
-        diveTimeStr = ts1.ToString(@"hh\hmm\mss\s");
+        diveTimeStr = ts1.ToString(@"h\:mm");
         diveDurationValue.text = diveTimeStr;
 
         // Depth
-        depthStr = Depth(_VRCamera.position.y).ToString("0.0") + " m";
+        depthStr = Depth(_VRCamera.position.y).ToString("00.0");
         depthValue.text = depthStr;
 
         // Tank pressure
@@ -232,7 +230,7 @@ public class DiverController : MonoBehaviour
 
         // Time left at depth
         TimeSpan ts2 = TimeSpan.FromSeconds(timeAtDepth);
-        timeAtDepthStr = ts2.ToString(@"hh\hmm\mss\s");
+        timeAtDepthStr = ts2.ToString(@"h\:mm");
         timeAtDepthValue.text = timeAtDepthStr;
 
         netBuoyancyValue.text = (buoyancy/g).ToString("0.00") + " kg";

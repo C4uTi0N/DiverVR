@@ -45,14 +45,14 @@ public class WatchUI : MonoBehaviour
 
     private void Update()
     {
-        //AscentRateViolation();
+        AscentRateViolation();
     }
 
 
     void FixedUpdate()
     {
-        //UpdateUI();
-        //ToggleWaterContact();
+        UpdateUI();
+        ToggleWaterContact();
     }
     
     private void UpdateUI()
