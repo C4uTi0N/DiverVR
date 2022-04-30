@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7ec782fc30fe1c46a67e23816b345c8, type: 3}
+  m_Name: Introduction
+  m_EditorClassIdentifier: 
+  Title: Din opgave er at nedstige til 18 meters
+  Text: "Din opgave er at nedstige til 18 meters dybde, og herefter at stige op til
+    overfladen igen.\r\n\r\nUndervejs vil du modtage instrukser, som vil guide dig
+    igennem opgaven.\r\n\r\nDerudover vil du l\xF8bende blive stillet sp\xF8rgsm\xE5l,
+    som vil teste din viden om dykning.\r\n"

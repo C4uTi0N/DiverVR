@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 530bd8aaee4c1e640a38725bc4d8d1f8, type: 3}
+  m_Name: Question 4
+  m_EditorClassIdentifier: 
+  Question: "Hvad er den foresl\xE5ede \u2018Ascent Rate\u2019?"
+  Answers:
+  - 5m/min i mere end 5 sekunder
+  - 5m/min i mere end 10 sekunder
+  - 10m/min i mere end 5 sekunder
+  - 10m/min i mere end 15 sekunder
+  CorrectAnswerIndex: 2

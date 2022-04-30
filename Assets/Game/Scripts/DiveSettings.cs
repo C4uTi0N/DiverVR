@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "DiverScriptableObject", menuName = "ScribtableObjects/DiverSettings")]
+[CreateAssetMenu(fileName = "DiverScriptableObject", menuName = "Scriptable Objects/DiverSettings")]
 public class DiveSettings : ScriptableObject {
 
     [field: Header("Environment Values")]
