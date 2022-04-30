@@ -429,9 +429,9 @@ Transform:
   m_LocalPosition: {x: 0.26999998, y: 0, z: 1.5050001}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 1832449627}
   - {fileID: 741875711}
   - {fileID: 2068418547}
-  - {fileID: 1832449627}
   - {fileID: 536178288}
   - {fileID: 610771655}
   - {fileID: 1764095498}
@@ -899,7 +899,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 281850617}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &836013094
 GameObject:
@@ -1484,7 +1484,6 @@ GameObject:
   - component: {fileID: 1450178320}
   - component: {fileID: 1450178319}
   - component: {fileID: 1450178321}
-  - component: {fileID: 1450178322}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -1536,21 +1535,6 @@ MonoBehaviour:
   NotificationEventChannel: {fileID: 11400000, guid: 18c171d9d648b0f408de48ca84fd396e, type: 2}
   DestroyNotificationEventChannel: {fileID: 11400000, guid: 9cb4f5029f9ae4f4681cb7fe76196812, type: 2}
   NoficationUI: {fileID: 7560111789815834127, guid: 60ea72de522ab514f85231988be681c0, type: 3}
---- !u!114 &1450178322
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1450178318}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fb104126dc31c97428a57220641b7715, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ProgressEventChannel: {fileID: 11400000, guid: 7024029142110fe4f9f2844d14335115, type: 2}
-  ProgressContainer:
-  - {fileID: 11400000, guid: 87b854feafc67a945a9ed8a78d0ed694, type: 2}
 --- !u!1 &1644816049
 GameObject:
   m_ObjectHideFlags: 0
@@ -1882,7 +1866,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 281850617}
-  m_RootOrder: 2
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1993131006
 GameObject:
@@ -2010,6 +1994,10 @@ PrefabInstance:
       propertyPath: m_AnchorMin.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6446300871686300048, guid: 2a83fbed84611a649aba9134f4f1e0a8, type: 3}
+      propertyPath: _waterBody
+      value: 
+      objectReference: {fileID: 226858686}
     - target: {fileID: 6446300871686300141, guid: 2a83fbed84611a649aba9134f4f1e0a8, type: 3}
       propertyPath: m_Name
       value: PlayerRig (XR Origin)
@@ -2119,7 +2107,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 281850617}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2068418548
 MonoBehaviour:
