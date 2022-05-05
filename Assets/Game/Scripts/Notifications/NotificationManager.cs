@@ -42,7 +42,7 @@ public class NotificationManager : MonoBehaviour
             _notification.transform.GetChild(0).Find("Button").GetComponent<Button>().onClick.AddListener(callback);
         }
 
-        Time.timeScale = 0;
+        //Time.timeScale = 0;
     }
 
     void DestroyNotification()

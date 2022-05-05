@@ -487,6 +487,7 @@ MonoBehaviour:
   Repeatable: 0
   ColiderTag: Player
   NotificationEventChannel: {fileID: 11400000, guid: 18c171d9d648b0f408de48ca84fd396e, type: 2}
+  DestroyNotificationEventChannel: {fileID: 11400000, guid: 9cb4f5029f9ae4f4681cb7fe76196812, type: 2}
   Notification: {fileID: 11400000, guid: f7061cbdb74e45141add11561028ab7b, type: 2}
 --- !u!65 &355092408
 BoxCollider:
@@ -1972,15 +1973,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 358866507843414939, guid: 2a83fbed84611a649aba9134f4f1e0a8, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 358866507843414939, guid: 2a83fbed84611a649aba9134f4f1e0a8, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 358866507843414939, guid: 2a83fbed84611a649aba9134f4f1e0a8, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 358866508295017363, guid: 2a83fbed84611a649aba9134f4f1e0a8, type: 3}
       propertyPath: m_AnchorMax.x
@@ -2046,13 +2047,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7516169782985580316, guid: 2a83fbed84611a649aba9134f4f1e0a8, type: 3}
-      propertyPath: m_AnchorMax.x
+    - target: {fileID: 6446300872330814426, guid: 2a83fbed84611a649aba9134f4f1e0a8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6446300872997104857, guid: 2a83fbed84611a649aba9134f4f1e0a8, type: 3}
+      propertyPath: m_LocalPosition.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7516169782985580316, guid: 2a83fbed84611a649aba9134f4f1e0a8, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7516169782985580316, guid: 2a83fbed84611a649aba9134f4f1e0a8, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7516169783467730708, guid: 2a83fbed84611a649aba9134f4f1e0a8, type: 3}
       propertyPath: m_AnchorMax.x
@@ -2124,6 +2133,7 @@ MonoBehaviour:
   Repeatable: 0
   ColiderTag: Player
   NotificationEventChannel: {fileID: 11400000, guid: 18c171d9d648b0f408de48ca84fd396e, type: 2}
+  DestroyNotificationEventChannel: {fileID: 0}
   Notification: {fileID: 11400000, guid: 3c0fe5c37a6b8464187afbce5aa25e7a, type: 2}
 --- !u!1 &2137691570
 GameObject:

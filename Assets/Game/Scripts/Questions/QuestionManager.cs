@@ -49,7 +49,7 @@ public class QuestionManager : MonoBehaviour
             index++;
         }
 
-        Time.timeScale = 0;
+        //Time.timeScale = 0;
 
     }
 

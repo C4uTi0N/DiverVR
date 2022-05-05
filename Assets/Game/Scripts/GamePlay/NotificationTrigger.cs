@@ -7,6 +7,7 @@ public class NotificationTrigger : Trigger
 
     [Header("Event Channel")]
     public NotificationEventChannelSO NotificationEventChannel;
+    public VoidEventChannel DestroyNotificationEventChannel;
 
     [Header("Notification")]
     public NotificationSO Notification;

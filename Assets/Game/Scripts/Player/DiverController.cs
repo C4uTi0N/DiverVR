@@ -125,12 +125,12 @@ public class DiverController : MonoBehaviour
         if (submergence > 0)
         {
             diveGoingOn = true;                     // Dummy variable (i.e could be set with UI button)
-            Debug.Log("diveGoinOn = true");
+            //Debug.Log("diveGoinOn = true");
         }
         else if (diveGoingOn)
         {
             diveGoingOn = false;
-            Debug.Log("diveGoinOn = false");
+            //Debug.Log("diveGoinOn = false");
             InitDive();
         }
 
@@ -220,9 +220,9 @@ public class DiverController : MonoBehaviour
         if (localTimeValue != null) { localTimeValue.text = timeStr; }
         
 
-        // Dive time
+        // Dive time (måske bare mm)
         TimeSpan ts1 = TimeSpan.FromSeconds(diveTime);
-        diveTimeStr = ts1.ToString(@"h\:mm");
+        diveTimeStr = ts1.ToString(@"mm");
         if (diveDurationValue != null) { diveDurationValue.text = diveTimeStr; }
 
         // Depth
@@ -233,9 +233,9 @@ public class DiverController : MonoBehaviour
         tankPressStr = tankPress.ToString("0.0") + " bar";
         if (tankPressureValue != null) { tankPressureValue.text = tankPressStr; }
 
-        // Time left at depth
+        // Time left at depth (måske mm:ss)
         TimeSpan ts2 = TimeSpan.FromSeconds(timeAtDepth);
-        timeAtDepthStr = ts2.ToString(@"h\:mm");
+        timeAtDepthStr = ts2.ToString(@"mm\:ss");
         if (timeAtDepthValue != null) { timeAtDepthValue.text = timeAtDepthStr; }
 
         if (netBuoyancyValue != null)

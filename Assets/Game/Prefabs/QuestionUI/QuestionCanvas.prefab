@@ -32,11 +32,11 @@ RectTransform:
   m_Father: {fileID: 4151087934160987327}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 1}
-  m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -164.2}
-  m_SizeDelta: {x: 456.4, y: 408.8}
-  m_Pivot: {x: 0.5, y: 1}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 450, y: 400}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3883201101588245966
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -88,6 +88,7 @@ GameObject:
   - component: {fileID: 6077162469657244595}
   - component: {fileID: 2430442201042392827}
   - component: {fileID: 5330268648828271205}
+  - component: {fileID: -6854024506462494785}
   m_Layer: 5
   m_Name: QuestionCanvas
   m_TagString: Untagged
@@ -127,8 +128,8 @@ Canvas:
   serializedVersion: 3
   m_RenderMode: 1
   m_Camera: {fileID: 0}
-  m_PlaneDistance: 100
-  m_PixelPerfect: 1
+  m_PlaneDistance: 1
+  m_PixelPerfect: 0
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
@@ -196,6 +197,18 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RaycastTriggerInteraction: 1
+--- !u!114 &-6854024506462494785
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 617287217611101716}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1afdbe1f0fef47544bf25230fd0fe0f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4681716987121734209
 GameObject:
   m_ObjectHideFlags: 0
@@ -230,8 +243,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 175.3}
-  m_SizeDelta: {x: 215.29, y: 20.39}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 400, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7707533535204560758
 CanvasRenderer:
