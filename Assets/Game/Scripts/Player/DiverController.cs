@@ -10,6 +10,7 @@ using UnityEngine.InputSystem;
 public class DiverController : MonoBehaviour
 {
     public DiveSettings diveSettings;
+    public Collider BCDControl;
 
     private const float g = 9.82f;         // Gravitational constant
     private float _waterSurface;
@@ -70,6 +71,7 @@ public class DiverController : MonoBehaviour
     public Transform _waterBody;                        // Gameobject holding our water
     [SerializeField] private Transform _XROrigin;       // Root Object of Player- or XR-Rig
     [SerializeField] private Transform _VRCamera;       // player Camera
+    [SerializeField] private Transform leftControllerTransform;
     Rigidbody _rb;                                      // Note: divers rb is offset to (0,1,0)
 
 
@@ -404,8 +406,13 @@ public class DiverController : MonoBehaviour
         float BCD_newVolStep = BoyleNewVol(BCDVolStep, bars, diveSettings.atmosphericPressure / 1000f);
         float deltaMass = GasMassAtSurfacePress(BCD_newVolStep);
 
+
         if (BCDOldBoyleVol <= diveSettings.BCD_Capacity * 1000 - BCDVolStep && rightControllerSecondaryButton.action.IsPressed())
         {
+            if (BCDControl.bounds.Contains(leftControllerTransform.position))
+            {
+                // Put BCD control code in here to simulate grabbing the real BCd button thingy
+            }
             BCDSurfAirVol += BCD_newVolStep;
             gasRemainingMass -= deltaMass;
         }

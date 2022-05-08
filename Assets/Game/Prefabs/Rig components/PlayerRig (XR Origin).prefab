@@ -1,5 +1,49 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &353561929
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 353561930}
+  - component: {fileID: 353561931}
+  m_Layer: 0
+  m_Name: BCD Control
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &353561930
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 353561929}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.214, y: 0, z: -0.219}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 6446300873106341655}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &353561931
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 353561929}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.2, y: 0.2, z: 0.2}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &17172294674204503
 GameObject:
   m_ObjectHideFlags: 0
@@ -2269,6 +2313,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   diveSettings: {fileID: 11400000, guid: f0c474f114bad4140b303515b0c10c4e, type: 2}
+  BCDControl: {fileID: 353561931}
   swimForce: 2
   minForce: 0
   minStrokeInterval: 0
@@ -2287,6 +2332,7 @@ MonoBehaviour:
   _waterBody: {fileID: 0}
   _XROrigin: {fileID: 6446300871686300143}
   _VRCamera: {fileID: 6446300873106341655}
+  leftControllerTransform: {fileID: 6446300873003944407}
   localTimeValue: {fileID: 0}
   diveDurationValue: {fileID: 0}
   tankPressureValue: {fileID: 0}
@@ -2320,7 +2366,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6446300872330814429
 Transform:
   m_ObjectHideFlags: 0
@@ -2360,7 +2406,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6446300872997104854}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 1.28, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 6446300873106341655}
@@ -2965,6 +3011,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 6446300872330814429}
+  - {fileID: 353561930}
   m_Father: {fileID: 6446300872997104857}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3697,11 +3744,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3547447709106790528, guid: 3c8c91bd911584746906359debf69ccf, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3547447709106790528, guid: 3c8c91bd911584746906359debf69ccf, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5261801221700875291, guid: 3c8c91bd911584746906359debf69ccf, type: 3}
       propertyPath: diverController
@@ -3709,15 +3756,15 @@ PrefabInstance:
       objectReference: {fileID: 6446300871686300048}
     - target: {fileID: 6741659175278777351, guid: 3c8c91bd911584746906359debf69ccf, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6741659175278777351, guid: 3c8c91bd911584746906359debf69ccf, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6741659175278777351, guid: 3c8c91bd911584746906359debf69ccf, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8267692959278138453, guid: 3c8c91bd911584746906359debf69ccf, type: 3}
       propertyPath: m_PixelPerfect
