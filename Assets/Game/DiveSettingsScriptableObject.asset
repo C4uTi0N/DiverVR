@@ -12,19 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d208f0961cfebbf41b7b5f5c5c04ab05, type: 3}
   m_Name: DiveSettingsScriptableObject
   m_EditorClassIdentifier: 
-  _waterSurface: 0
-  waterTemp: 20
+  waterTemp: 15
   waterDensity: 1025
   atmosphericPressure: 1013
   diverHeight: 180
   diverWeight: 70
   RMV: 15
   suitThickness: 5
-  tankMaterial: 1
-  matValue: 1
-  tankEmptyWeight: 17
+  tankMaterial: 0
+  matValue: 0
+  tankEmptyWeight: 12
   tankStartPress: 300
   tankCapacity: 10
-  leadWeights: 2
+  leadWeights: 4
   BCD_weight: 3.5
   BCD_Capacity: 15
