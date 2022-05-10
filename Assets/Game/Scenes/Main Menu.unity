@@ -97,7 +97,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 112000000, guid: 02298f685e8d9de48be86b13b600e32a, type: 2}
+  m_LightingDataAsset: {fileID: 112000000, guid: 376310c5824ce1b44b23c287a062538b, type: 2}
   m_LightingSettings: {fileID: 0}
 --- !u!196 &4
 NavMeshSettings:
@@ -1372,12 +1372,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 650508968}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -5, y: 0, z: -5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_Father: {fileID: 695860832}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &659420849
 GameObject:
@@ -1540,6 +1540,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 705507995}
+  - {fileID: 650508973}
   - {fileID: 123253788}
   m_Father: {fileID: 0}
   m_RootOrder: 1
@@ -1990,7 +1991,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh24552
+  m_Name: pb_Mesh29984
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -3523,16 +3524,24 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6446300871671246107, guid: 2a83fbed84611a649aba9134f4f1e0a8, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6446300871671246107, guid: 2a83fbed84611a649aba9134f4f1e0a8, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6446300871671246107, guid: 2a83fbed84611a649aba9134f4f1e0a8, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.01
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6446300871671246107, guid: 2a83fbed84611a649aba9134f4f1e0a8, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.01
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6446300871671246107, guid: 2a83fbed84611a649aba9134f4f1e0a8, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.01
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6446300871671246111, guid: 2a83fbed84611a649aba9134f4f1e0a8, type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -3541,7 +3550,7 @@ PrefabInstance:
     - target: {fileID: 6446300871686300048, guid: 2a83fbed84611a649aba9134f4f1e0a8, type: 3}
       propertyPath: _waterBody
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 650508973}
     - target: {fileID: 6446300871686300141, guid: 2a83fbed84611a649aba9134f4f1e0a8, type: 3}
       propertyPath: m_Name
       value: PlayerRig (XR Origin)
@@ -3595,16 +3604,24 @@ PrefabInstance:
       value: 1.14
       objectReference: {fileID: 0}
     - target: {fileID: 6446300873003944407, guid: 2a83fbed84611a649aba9134f4f1e0a8, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6446300873003944407, guid: 2a83fbed84611a649aba9134f4f1e0a8, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6446300873003944407, guid: 2a83fbed84611a649aba9134f4f1e0a8, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.01
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6446300873003944407, guid: 2a83fbed84611a649aba9134f4f1e0a8, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.01
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6446300873003944407, guid: 2a83fbed84611a649aba9134f4f1e0a8, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.01
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6446300873106341656, guid: 2a83fbed84611a649aba9134f4f1e0a8, type: 3}
       propertyPath: m_ClearFlags
