@@ -14,6 +14,7 @@ public class QuestionManager : MonoBehaviour
 
     private GameObject background;
 
+
     private void OnEnable()
     {
         Debug.Log("QM Enabled");
@@ -25,7 +26,7 @@ public class QuestionManager : MonoBehaviour
         questionEventChannel.OnAskQuesiton -= ShowQuestion;
     }
 
-    public void ShowQuestion(QuestionScriptableObject question, UnityAction<bool> callback)
+    public void ShowQuestion(QuestionSO question, UnityAction<bool> callback)
     {
         background = Instantiate(QuestionUiBackground, new Vector3(0, 0, 0), Quaternion.identity);
 
@@ -50,11 +51,12 @@ public class QuestionManager : MonoBehaviour
         }
 
         //Time.timeScale = 0;
+        GameObject.FindGameObjectWithTag("Player").GetComponent<DiverController>().playerPaused = true;
 
     }
 
 
-    public void OnClick(QuestionScriptableObject question, int answerIndex, UnityAction<bool> callback)
+    public void OnClick(QuestionSO question, int answerIndex, UnityAction<bool> callback)
     {
         Destroy(background);
         Time.timeScale = 1;

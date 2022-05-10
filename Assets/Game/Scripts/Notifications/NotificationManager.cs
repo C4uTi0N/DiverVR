@@ -16,6 +16,7 @@ public class NotificationManager : MonoBehaviour
 
     private GameObject _notification;
 
+
     private void OnEnable()
     {
         NotificationEventChannel.OnShowNotification += ShowNotification;
@@ -42,7 +43,8 @@ public class NotificationManager : MonoBehaviour
             _notification.transform.GetChild(0).Find("Button").GetComponent<Button>().onClick.AddListener(callback);
         }
 
-        //Time.timeScale = 0;
+        // Time.timeScale = 0;
+        GameObject.FindGameObjectWithTag("Player").GetComponent<DiverController>().playerPaused = true;
     }
 
     void DestroyNotification()
@@ -52,6 +54,7 @@ public class NotificationManager : MonoBehaviour
             Destroy(_notification);
         }
 
-        Time.timeScale = 1;
+        // Time.timeScale = 1;
+        GameObject.FindGameObjectWithTag("Player").GetComponent<DiverController>().playerPaused = false;
     }
 }

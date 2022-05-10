@@ -204,9 +204,8 @@ public class DiveSettingsManager : MonoBehaviour
             diveSettings.waterDensity = 1025f;          // Kg/m3
         if (!lockAtmosphericPressure)
             diveSettings.atmosphericPressure = 1013f;   // Air pressure in hPa (same as millibar)
-
         if (!lockTankMaterial)
-            diveSettings.matValue = 0;
+            diveSettings.matValue = 0;                  // Aluminium(0), Steel(1)
         if (!lockTankEmptyWeight)
             diveSettings.tankEmptyWeight = 12f;         // kg
         if (!lockTankStartPressure)

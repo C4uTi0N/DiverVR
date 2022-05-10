@@ -3,12 +3,17 @@ using System.Collections;
 using UnityEngine;
 using TMPro;
 using UnityEngine.InputSystem;
+using System.Collections.Generic;
+using UnityEngine.XR.Interaction.Toolkit;
 
 
 [RequireComponent(typeof(Rigidbody))]
 
 public class DiverController : MonoBehaviour
 {
+    
+    public bool playerPaused = false;
+
     public DiveSettings diveSettings;
     public Collider BCDControl;
 
@@ -16,7 +21,7 @@ public class DiverController : MonoBehaviour
     private float _waterSurface;
 
     [Header("Swimming Variables")]
-    public float swimForce = 2f;           // Force of strokes
+    public float swimForce = 1.5f;           // Force of strokes
     public float minForce = 0f;            // Min force for a stroke to be registered (default 0.25)
     public float minStrokeInterval = 0f;   // Min time between strokes (default 0.25)
     public float _strokeCooldown;          // Timer which is reset to 0 at each stroke
@@ -26,7 +31,7 @@ public class DiverController : MonoBehaviour
     [Header("BCD Variables")]
     public float BCDOldBoyleVol = 0f;     // l, Previous calculated volume of BCD air.
     public float BCDSurfAirVol = 0f;      // l, Equivalent surface volume of air in BCD.
-    public float BCDVolStep = 0.005f;     // l, Air added to BCD per step (fixed update).
+    public float BCDVolStep = 0.030f;     // l, Air added to BCD per step (fixed update).
 
 
     #region Private Variables
@@ -44,10 +49,10 @@ public class DiverController : MonoBehaviour
 
     // User data variables
     bool diveGoingOn = false;               // Has the dive begun?
-    float userDataCooldown = 0.25f;            // s, Update frequecy of user data.
+    float userDataCooldown = 0.25f;         // s, Update frequecy of user data.
     float userDataUpdTimer = 0;
 
-    //
+    // Diver values
     float previousDepth;                    // depth one second ago
     float time;                             // hh:mm:ss, current local time
     float diveTime;                         // s, Time elapsed since the dive began.
@@ -55,6 +60,7 @@ public class DiverController : MonoBehaviour
     int maxDepth;                           // m, max depth reached
     float tankPress;                        // bar, current pressure in tank
     float timeAtDepth;                      // s, The time left at current depth, (with time to surface subtracted).
+    Vector3 diverOldVelocity;               // Velocity of diver, before the dive was paused
     #endregion                              // Note: the above is not NDL (No Decompression Limit)
 
     //
@@ -71,7 +77,9 @@ public class DiverController : MonoBehaviour
     public Transform _waterBody;                        // Gameobject holding our water
     [SerializeField] private Transform _XROrigin;       // Root Object of Player- or XR-Rig
     [SerializeField] private Transform _VRCamera;       // player Camera
-    [SerializeField] private Transform leftControllerTransform;
+    [SerializeField] private Transform _leftControllerTransform;
+    private GameObject _locomotionSystemGO;
+    private ActionBasedContinuousMoveProvider _actionBasedContinuousMoveProvider;
     Rigidbody _rb;                                      // Note: divers rb is offset to (0,1,0)
 
 
@@ -104,6 +112,8 @@ public class DiverController : MonoBehaviour
 
     private void Awake()
     {
+        _locomotionSystemGO = GameObject.FindGameObjectWithTag("Locomotion System");
+        _actionBasedContinuousMoveProvider = _locomotionSystemGO.GetComponent<ActionBasedContinuousMoveProvider>();
         _rb = GetComponent<Rigidbody>();
         _rb.constraints = RigidbodyConstraints.FreezeRotation;
         _rb.mass = diveSettings.diverWeight;
@@ -116,76 +126,89 @@ public class DiverController : MonoBehaviour
     }
 
 
-
     private void FixedUpdate()
     {
-        buoyancy = ApplyGravity(_rb);        // Always apply gravity.
-
-        // Submergence controls the beginning of the dive.
-        submergence = PlayerSubmergence(_VRCamera.gameObject);    // Degree of submergence.
-
-        if (submergence > 0)
-        {
-            diveGoingOn = true;                     // Dummy variable (i.e could be set with UI button)
-            //Debug.Log("diveGoinOn = true");
+        if (playerPaused) {
+            if (_actionBasedContinuousMoveProvider.enabled == true) {
+                _actionBasedContinuousMoveProvider.enabled = false;
+                diverOldVelocity = _rb.velocity;
+                _rb.velocity = Vector3.zero;
+            }
         }
-        else if (diveGoingOn)
-        {
-            diveGoingOn = false;
-            //Debug.Log("diveGoinOn = false");
-            InitDive();
+        else {
+            if (_actionBasedContinuousMoveProvider.enabled == false) {
+                _actionBasedContinuousMoveProvider.enabled = true;
+                _rb.velocity = diverOldVelocity;
+            }
+
+            buoyancy = ApplyGravity(_rb);        // Always apply gravity.
+
+            // Submergence controls the beginning of the dive.
+            submergence = PlayerSubmergence(_VRCamera.gameObject);    // Degree of submergence.
+
+            // Here the dive is started and stopped.
+            if (submergence > 0) {
+                diveGoingOn = true;                     
+                if (_actionBasedContinuousMoveProvider.enableStrafe == true) _actionBasedContinuousMoveProvider.enableStrafe = false;
+            }
+            else if (diveGoingOn) {
+                diveGoingOn = false;
+                _actionBasedContinuousMoveProvider.enableStrafe = true;
+                InitDive();
+            }
+
+            // Updating timers.
+            userDataUpdTimer += Time.deltaTime;
+            if (diveGoingOn)
+            {
+                breathTimer += Time.deltaTime;
+                diveTime += Time.deltaTime;
+            }
+
+            // Taking a breath (if the timer is running).
+            if (breathTimer > breathCooldown)
+            {
+                breathTimer = 0;
+                TakeBreath();
+            }
+
+            // Updating water drag and buoyancy if the dive has begun.
+            if (diveGoingOn)
+            {
+                Drag(_rb, submergence);
+                buoyancy += BodyBuoyancy(_rb, submergence);
+                buoyancy += SuitBuoyancy(submergence);
+                buoyancy += BCD_Buoyancy(submergence);
+                buoyancy += TankBuoyancy(submergence);
+                buoyancy += LeadBuoyancy(submergence);
+            }
+
+            // Allowing swim movement if more than half submerged.
+            if (submergence > 0.5f) SwimMovement();
+
+            // Updating data for UI
+            if (userDataUpdTimer > userDataCooldown)
+            {
+                userDataUpdTimer = 0;
+
+                // Calculating max stay-time at current depth.
+                // ============================================
+                // Subtracting safety-gas mass.
+                float gasEndMass = GasDensity(safetyEndPress) * diveSettings.tankCapacity / 1000;   // kg. Tank gas mass, when tank pressure is at 'safetyEndPress'.
+                float gasToUseMass = gasRemainingMass - gasEndMass;
+                // Subtracting mass of gas used during ascent.
+                gasToUseMass -= AscentGasMass();
+                // Subtracting mass of gas used during 5min safety stop at 5m.
+                gasToUseMass -= StopGasMass(5f, 5f);
+                // We can now calculate remaining time at current depth.
+                timeAtDepth = TimeAtDepth(gasToUseMass);
+                // ============================================
+
+                CalculateAscentRate(Depth(_VRCamera.position.y));
+                UpdateUserData();
+            }
         }
 
-        // Updating timers.
-        userDataUpdTimer += Time.deltaTime;
-        if (diveGoingOn)
-        {
-            breathTimer += Time.deltaTime;
-            diveTime += Time.deltaTime;
-        }
-
-        // Taking a breath (if the timer is running).
-        if (breathTimer > breathCooldown)
-        {
-            breathTimer = 0;
-            TakeBreath();
-        }
-
-        // Updating water drag and buoyancy if the dive has begun.
-        if (diveGoingOn)
-        {
-            Drag(_rb, submergence);
-            buoyancy += BodyBuoyancy(_rb, submergence);
-            buoyancy += SuitBuoyancy(submergence);
-            buoyancy += BCD_Buoyancy(submergence);
-            buoyancy += TankBuoyancy(submergence);
-            buoyancy += LeadBuoyancy(submergence);
-        }
-
-        // Allowing swim movement if more than half submerged.
-        if (submergence > 0.5f) SwimMovement();
-
-        // Updating data for UI
-        if (userDataUpdTimer > userDataCooldown)
-        {
-            userDataUpdTimer = 0;
-
-            // Calculating max stay-time at current depth.
-            // ============================================
-            // Subtracting safety-gas mass.
-            float gasEndMass = GasDensity(safetyEndPress) * diveSettings.tankCapacity / 1000;   // kg. Tank gas mass, when tank pressure is at 'safetyEndPress'.
-            float gasToUseMass = gasRemainingMass - gasEndMass;
-            // Subtracting mass of gas used during ascent.
-            gasToUseMass -= AscentGasMass();
-            // Subtracting mass of gas used during 5min safety stop at 5m.
-            gasToUseMass -= StopGasMass(5f, 5f);
-            // We can now calculate remaining time at current depth.
-            timeAtDepth = TimeAtDepth(gasToUseMass);
-            // ============================================
-
-            CalculateAscentRate(Depth(_VRCamera.position.y));
-            UpdateUserData();
-        }
     }
 
 
@@ -235,9 +258,11 @@ public class DiverController : MonoBehaviour
         tankPressStr = tankPress.ToString("0.0") + " bar";
         if (tankPressureValue != null) { tankPressureValue.text = tankPressStr; }
 
-        // Time left at depth (måske mm:ss)
-        TimeSpan ts2 = TimeSpan.FromSeconds(timeAtDepth);
-        timeAtDepthStr = ts2.ToString(@"mm\:ss");
+        // Time left at depth (måske mmm:ss)
+        int mins = (int)(timeAtDepth / 60);
+        int secs = (int)timeAtDepth % 60;
+        //timeAtDepthStr = mins.ToString() + ":" + secs.ToString("00");
+        timeAtDepthStr = mins.ToString();
         if (timeAtDepthValue != null) { timeAtDepthValue.text = timeAtDepthStr; }
 
         if (netBuoyancyValue != null)
@@ -407,9 +432,9 @@ public class DiverController : MonoBehaviour
         float deltaMass = GasMassAtSurfacePress(BCD_newVolStep);
 
 
-        if (BCDOldBoyleVol <= diveSettings.BCD_Capacity * 1000 - BCDVolStep && rightControllerSecondaryButton.action.IsPressed())
+        if (BCDOldBoyleVol <= diveSettings.BCD_Capacity - BCDVolStep && rightControllerSecondaryButton.action.IsPressed())
         {
-            if (BCDControl.bounds.Contains(leftControllerTransform.position))
+            if (BCDControl.bounds.Contains(_leftControllerTransform.position))
             {
                 // Put BCD control code in here to simulate grabbing the real BCd button thingy
             }
@@ -594,16 +619,6 @@ public class DiverController : MonoBehaviour
     // Returns water depth of the game object
     float Depth(float yPos)
     {
-
-        /*
-        // Diver is comming out of the water
-        if (yPos > _waterSurface + diveSettings.diverHeight/100f && diveGoingOn)
-        {
-            diveGoingOn = false;
-            InitDive();
-        }
-        */
-
         if (yPos >= _waterSurface) return 0;         // We don't want a depth above the water surface.
         return Mathf.Abs(_waterSurface - yPos);      // m, positive number.
     }
@@ -632,12 +647,12 @@ public class DiverController : MonoBehaviour
         if (leftControllerSecondaryButton.action.IsPressed())
         {
             Vector3 worldVel = _XROrigin.TransformDirection(Vector3.up);
-            _rb.AddForce(worldVel * swimForce * 0.3f, ForceMode.Acceleration);
+            _rb.AddForce(worldVel * swimForce * 0.5f, ForceMode.Acceleration);
         }
         if (leftControllerPrimaryButton.action.IsPressed())
         {
             Vector3 worldVel = _XROrigin.TransformDirection(-1 * Vector3.up);
-            _rb.AddForce(worldVel * swimForce * 0.3f, ForceMode.Acceleration);
+            _rb.AddForce(worldVel * swimForce * 0.5f, ForceMode.Acceleration);
         }
 
         // Movement (swimming) with hands; with left & right controllers movement.

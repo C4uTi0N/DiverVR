@@ -7,7 +7,7 @@ public abstract class Trigger : MonoBehaviour
 
     [Header("Trigger")]
     public bool Repeatable;
-    public string ColiderTag = "Player";
+    public string ColliderTag = "Player";
 
     protected bool _triggeredOnEnter = false;
     protected bool _triggeredOnExit = false;
@@ -17,7 +17,7 @@ public abstract class Trigger : MonoBehaviour
 
     protected virtual void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag(ColiderTag) && (Repeatable || !_triggeredOnEnter))
+        if (other.CompareTag(ColliderTag) && (Repeatable || !_triggeredOnEnter))
         {
             OnEnter();
             _triggeredOnEnter = true;
@@ -26,7 +26,7 @@ public abstract class Trigger : MonoBehaviour
 
     protected virtual void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag(ColiderTag) && (Repeatable || !_triggeredOnExit))
+        if (other.CompareTag(ColliderTag) && (Repeatable || !_triggeredOnExit))
         {
             OnExit();
             _triggeredOnExit = true;

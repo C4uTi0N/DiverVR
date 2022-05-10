@@ -5,9 +5,9 @@ using UnityEngine.Events;
 public class QuestionEventChannelSO : ScriptableObject
 {
 
-    public UnityAction<QuestionScriptableObject, UnityAction<bool>> OnAskQuesiton;
+    public UnityAction<QuestionSO, UnityAction<bool>> OnAskQuesiton;
 
-    public void RaiseEvent(QuestionScriptableObject question, UnityAction<bool> callback)
+    public void RaiseEvent(QuestionSO question, UnityAction<bool> callback)
     {
         if(OnAskQuesiton != null)
         {

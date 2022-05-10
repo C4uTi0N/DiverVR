@@ -8,7 +8,7 @@ using UnityEngine;
 public class AskQuestionTrigger : Trigger
 {
     [Header("Question SO")]
-    public QuestionScriptableObject Question;
+    public QuestionSO Question;
 
     [Header("Event Channel")]
     public QuestionEventChannelSO askQuestionEventChannel;

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7ec782fc30fe1c46a67e23816b345c8, type: 3}
   m_Name: Introduction
   m_EditorClassIdentifier: 
-  Title: Din opgave er at nedstige til 18 meters
+  Title: Nedstigning og opstigning
   Text: "Din opgave er at nedstige til 18 meters dybde, og herefter at stige op til
     overfladen igen.\r\n\r\nUndervejs vil du modtage instrukser, som vil guide dig
     igennem opgaven.\r\n\r\nDerudover vil du l\xF8bende blive stillet sp\xF8rgsm\xE5l,
