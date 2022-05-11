@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class QuestionManager : MonoBehaviour
 {
+    public Transform playerCamera;
+
     [Header("Prefabs")]
     public GameObject QuestionUiBackground;
     public GameObject QuestionUiQuestion;
@@ -28,11 +30,11 @@ public class QuestionManager : MonoBehaviour
 
     public void ShowQuestion(QuestionSO question, UnityAction<bool> callback)
     {
-        background = Instantiate(QuestionUiBackground, new Vector3(0, 0, 0), Quaternion.identity);
+        background = Instantiate(QuestionUiBackground, playerCamera.position, Quaternion.Euler(0, playerCamera.eulerAngles.y, 0));
 
-        background.transform.Find("Question").GetComponent<TextMeshProUGUI>().text = question.Question;
+        background.transform.Find("Panel_Question").transform.Find("Question").GetComponent<TextMeshProUGUI>().text = question.Question;
 
-        float offset = -50f;
+        float offset = -60f;
 
         int index = 0;
         foreach (string answers in question.Answers)
@@ -40,13 +42,13 @@ public class QuestionManager : MonoBehaviour
             int i = index;
 
             GameObject q = Instantiate(QuestionUiQuestion, new Vector3(0, offset, 0), Quaternion.identity);
-            q.transform.SetParent(background.transform.Find("Background").transform, false); // get the first child of the canvas prefab which should be the background
+            q.transform.SetParent(background.transform.Find("Panel_Question").transform.Find("Background").transform, false); // get the first child of the canvas prefab which should be the background
 
             q.GetComponentInChildren<TextMeshProUGUI>().text = answers;
             q.GetComponentInChildren<Button>().onClick.AddListener(delegate { OnClick(question, i, callback); });
 
 
-            offset -= 30f;
+            offset -= 40f;
             index++;
         }
 

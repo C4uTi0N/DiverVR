@@ -7,6 +7,8 @@ using UnityEngine.UI;
 
 public class NotificationManager : MonoBehaviour
 {
+    public Transform playerCamera;
+
     [Header("Event Channel")]
     public NotificationEventChannelSO NotificationEventChannel;
     public VoidEventChannel DestroyNotificationEventChannel;
@@ -31,7 +33,7 @@ public class NotificationManager : MonoBehaviour
 
     void ShowNotification(NotificationSO notification, UnityAction callback)
     {
-        _notification = Instantiate(NoficationUI, new Vector3(0, 0, 0), Quaternion.identity);
+        _notification = Instantiate(NoficationUI, playerCamera.position, Quaternion.Euler(0, playerCamera.eulerAngles.y, 0));
 
         _notification.transform.GetChild(0).Find("Title").GetComponent<TextMeshProUGUI>().text = notification.Title;
         _notification.transform.GetChild(0).Find("Text").GetComponent<TextMeshProUGUI>().text = notification.Text;
