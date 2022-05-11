@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Done
   m_EditorClassIdentifier: 
   Title: Godt klaret!
-  Text: "Du har gennemf\xF8rt dit dyk. Og resten er free play."
+  Text: "Du har gennemf\xF8rt dit dyk.\nHerefter er du fri til at g\xF8re som du
+    vil."

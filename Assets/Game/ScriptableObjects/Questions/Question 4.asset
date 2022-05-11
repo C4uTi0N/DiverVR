@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 530bd8aaee4c1e640a38725bc4d8d1f8, type: 3}
   m_Name: Question 4
   m_EditorClassIdentifier: 
-  Question: "Hvad er den foresl\xE5ede \u2018Ascent Rate\u2019?"
+  Question: "Hvad er den foresl\xE5ede gr\xE6nse for \u2018Ascent Rate\u2019?"
   Answers:
   - 5m/min i mere end 5 sekunder
   - 5m/min i mere end 10 sekunder

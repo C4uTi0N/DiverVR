@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: EmptyBCD
   m_EditorClassIdentifier: 
   Title: Dykkerklar
-  Text: "N\xE5r du er klar til at dykke, t\xF8m dit BCD for luft. \r\n"
+  Text: "N\xE5r du er klar til at dykke.\nJuster luftm\xE6ngden i din BCD hvis n\xF8dvendigt.\n"

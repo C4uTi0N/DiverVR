@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: CorrectAnswer4
   m_EditorClassIdentifier: 
   Title: Det er korrekt!
-  Text: "Den foresl\xE5ede Ascent Rate er 10m/min i mere end 5 sekunder."
+  Text: "Den foresl\xE5ede gr\xE6nse for Ascent Rate er 10m/min i mere end 5 sekunder."

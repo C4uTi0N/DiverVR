@@ -15,7 +15,7 @@ MonoBehaviour:
   Question: "Flot! Du har nu n\xE5et 18 meters dybde. Nu skal du stige sikkert op
     igen. Hvordan skal man kontrollere sin opdrift under opstigning? Ved at \u2026"
   Answers:
-  - "tils\xE6tte sm\xE5 m\xE6ngder luft til sin BCD"
-  - "frakoble sine v\xE6gte"
-  - "frig\xF8re sm\xE5 m\xE6ngder luft fra BCD med j\xE6vne mellemrum"
+  - "Tils\xE6tte sm\xE5 m\xE6ngder luft til sin BCD"
+  - "Frakoble sine v\xE6gte"
+  - "Frig\xF8re sm\xE5 m\xE6ngder luft fra BCD med j\xE6vne mellemrum"
   CorrectAnswerIndex: 2
