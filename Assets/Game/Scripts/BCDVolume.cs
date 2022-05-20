@@ -18,6 +18,6 @@ public class BCDVolume : MonoBehaviour
     public void Update()
     {
         //Debug.Log(bcd.value);
-        bcd.value = diverController.BCDOldBoyleVol;
+        bcd.value = diverController.BCD_Volume;
     }
 }

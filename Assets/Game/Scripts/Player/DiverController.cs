@@ -11,7 +11,6 @@ using UnityEngine.XR.Interaction.Toolkit;
 
 public class DiverController : MonoBehaviour
 {
-    
     public bool playerPaused = false;
 
     public DiveSettings diveSettings;
@@ -29,10 +28,9 @@ public class DiverController : MonoBehaviour
 
 
     [Header("BCD Variables")]
-    public float BCDOldBoyleVol = 0f;     // l, Previous calculated volume of BCD air.
-    public float BCDSurfAirVol = 0f;      // l, Equivalent surface volume of air in BCD.
-    public float BCDVolStep = 0.030f;     // l, Air added to BCD per step (fixed update).
-
+    public float BCD_Volume = 0f;          // l, Last calculated volume of the BCD.
+    public float BCD_Surf_Vol = 0;         // l, Volume BCD will assume if brought to surface.     
+    public float BCDVolStep = 0.030f;      // l, Air added to BCD per step (fixed update).
 
     #region Private Variables
     // Breath
@@ -42,7 +40,7 @@ public class DiverController : MonoBehaviour
 
     // Gas & descending, ascending
     float gasStartMass;
-    float gasRemainingMass;
+    double gasRemainingMass;
     float safetyEndPress = 35f;             // bar, Minimum pressure to surface with (equivalent to 500 PSI).
     float ascentMaxMtrPerMin = 10f;         // m, Maximum meters/min when ascending.
     float buoyancy = 0f;
@@ -50,6 +48,7 @@ public class DiverController : MonoBehaviour
     // User data variables
     bool diveGoingOn = false;               // Has the dive begun?
     float userDataCooldown = 0.25f;         // s, Update frequecy of user data.
+    //float userDataCooldown = 1f;         // s, Update frequecy of user data.
     float userDataUpdTimer = 0;
 
     // Diver values
@@ -58,7 +57,7 @@ public class DiverController : MonoBehaviour
     float diveTime;                         // s, Time elapsed since the dive began.
     float depth;                            // m, current diver depth
     int maxDepth;                           // m, max depth reached
-    float tankPress;                        // bar, current pressure in tank
+    double tankPress;                        // bar, current pressure in tank
     float timeAtDepth;                      // s, The time left at current depth, (with time to surface subtracted).
     Vector3 diverOldVelocity;               // Velocity of diver, before the dive was paused
     #endregion                              // Note: the above is not NDL (No Decompression Limit)
@@ -194,12 +193,18 @@ public class DiverController : MonoBehaviour
                 // Calculating max stay-time at current depth.
                 // ============================================
                 // Subtracting safety-gas mass.
-                float gasEndMass = GasDensity(safetyEndPress) * diveSettings.tankCapacity / 1000;   // kg. Tank gas mass, when tank pressure is at 'safetyEndPress'.
-                float gasToUseMass = gasRemainingMass - gasEndMass;
+                double gasEndMass = VanDerWall_Mass(BarToPascal(safetyEndPress),
+                                                    CelciusToKelvin(diveSettings.waterTemp),
+                                                    diveSettings.tankCapacity / 1000d);
+
+                double gasToUseMass = gasRemainingMass - gasEndMass;
+
                 // Subtracting mass of gas used during ascent.
                 gasToUseMass -= AscentGasMass();
+
                 // Subtracting mass of gas used during 5min safety stop at 5m.
                 gasToUseMass -= StopGasMass(5f, 5f);
+
                 // We can now calculate remaining time at current depth.
                 timeAtDepth = TimeAtDepth(gasToUseMass);
                 // ============================================
@@ -217,15 +222,19 @@ public class DiverController : MonoBehaviour
     {
         breathTimer = 0;
         diveTime = 0;
-        BCDOldBoyleVol = 0f;           // Emptying the BCD
-        BCDSurfAirVol = 0;
+        BCD_Volume = 0f;           // Emptying the BCD
+        BCD_Surf_Vol = 0;          // Emptying the BCD
         RefillTank();
     }
 
+    // Initializing the tank to start pressure.
     public void RefillTank()
     {
         tankPress = diveSettings.tankStartPress;     // Refilling the tank
-        gasStartMass = GasDensity(tankPress) * diveSettings.tankCapacity / 1000f;
+        double gasStartMass = VanDerWall_Mass( BarToPascal(tankPress),
+                                               CelciusToKelvin(diveSettings.waterTemp),
+                                               diveSettings.tankCapacity / 1000d
+                                             );
         gasRemainingMass = gasStartMass;
     }
 
@@ -261,7 +270,6 @@ public class DiverController : MonoBehaviour
         // Time left at depth (måske mmm:ss)
         int mins = (int)(timeAtDepth / 60);
         int secs = (int)timeAtDepth % 60;
-        //timeAtDepthStr = mins.ToString() + ":" + secs.ToString("00");
         timeAtDepthStr = mins.ToString();
         if (timeAtDepthValue != null) { timeAtDepthValue.text = timeAtDepthStr; }
 
@@ -269,7 +277,7 @@ public class DiverController : MonoBehaviour
             netBuoyancyValue.text = (buoyancy / g).ToString("0.00") + " kg";
 
         if (BCD_AirVolValue != null)
-        BCD_AirVolValue.text = BCDOldBoyleVol.ToString("0.00") + " ltr";
+        BCD_AirVolValue.text = BCD_Volume.ToString("0.00") + " ltr";
 
         // Max depth dived
         if (maxDepth < depth)
@@ -291,20 +299,22 @@ public class DiverController : MonoBehaviour
     }
 
 
+    // Updating the tank pressure for one breath.
     void TakeBreath()
     {
-
-        float bars = PressureAtDepth(_VRCamera.position.y) / 1000f;   // bar, Pressure at current depth.
-        // Diver air volume per breath * bars. Gives equivalent surface volume, for 1 breath.
-        float breathVol = (diveSettings.RMV / breathsPerMin) * bars;
-        float breathGasMass = GasMassAtSurfacePress(breathVol);
+        float pascalPress = PressureAtDepth(_VRCamera.position.y);   // pascal, Pressure at current depth.
+        double breathGasMass = VanDerWall_Mass( pascalPress,
+                                                CelciusToKelvin(diveSettings.waterTemp),
+                                                (diveSettings.RMV / breathsPerMin / 1000d)
+                                              );
         // Book keeping
-        gasRemainingMass -= breathGasMass;
-        tankPress = TankPressure(gasRemainingMass);
-
+        if (gasRemainingMass > breathGasMass) gasRemainingMass -= breathGasMass;
+        tankPress = VanDerWall_Press(gasRemainingMass,
+                                     CelciusToKelvin(diveSettings.waterTemp),
+                                     diveSettings.tankCapacity / 1000d
+                                    );
         /*
-        Debug.Log("Current air density:" + GasDensity(atmosphericPressue/1000f));
-        Debug.Log("Bars:" + bars + ", breath vol:" + breathVol + ", gasFillMass:" + gasStartMass + ", breathMass:" + breathGasMass);
+        Debug.Log("BreathMass:" + breathGasMass);
         Debug.Log("Updated tank pressure:" + tankPress);
         */
     }
@@ -314,52 +324,66 @@ public class DiverController : MonoBehaviour
     float AscentGasMass()
     {
         depth = Depth(_VRCamera.position.y);
-        float avgSurfacingDepth = depth / 2f;                                           // m, The average depth during ascent.
-        float swimMinsToSurface = depth / ascentMaxMtrPerMin;                           // minutes, Minimum time to surface, excluding safety stop.
-        float breathCount = swimMinsToSurface * breathsPerMin;                          // Number of breaths to surface, excluding safety stop.
-        float avgBars = PressureAtDepth(_VRCamera.position.y / 2f) / 1000f;             // bar, Pressure at average surfacing depth.
-        float breathVol = (diveSettings.RMV / breathsPerMin) * avgBars;
-        float ascentGasMass = GasMassAtSurfacePress(breathVol) * breathCount;           // kg, Total mass of ascent air.
-
+        float avgSurfacingDepth = depth / 2f;                                               // m, The average depth during ascent.
+        float swimMinsToSurface = depth / ascentMaxMtrPerMin;                               // minutes, Minimum time to surface, excluding safety stop.
+        float breathCount = swimMinsToSurface * breathsPerMin;                              // Number of breaths to surface, excluding safety stop.
+        float avgPascals = PressureAtDepth(avgSurfacingDepth);                              // pascal, Pressure at average surfacing depth.
+        double totalBreathVol = (diveSettings.RMV / breathsPerMin) * breathCount / 1000d;   // m3, Total volume of air used during ascent.
+        double ascentGasMass = 0;
+        if (totalBreathVol > 0)
+            ascentGasMass = VanDerWall_Mass( avgPascals,                                    // kg, Total mass of ascent air.
+                                                CelciusToKelvin(diveSettings.waterTemp),
+                                                totalBreathVol
+                                            );
         /*
-            Debug.Log("Avg surf depth: " + avgSurfacingDepth);
-            Debug.Log("Mins to surface: " + swimMinsToSurface);
-            Debug.Log("Number of breaths to surface: " + breathCount);
-            Debug.Log("Avg. pressure during ascent: " + avgBars);
-            Debug.Log("One breath avg. vol: " + breathVol);
-            Debug.Log("Mass of one average breath: " + GasMassAtSurfacePress(breathVol));
-            Debug.Log("Ascent gas mass: " + ascentGasMass);         
+        Debug.Log("-------------");   
+        Debug.Log("Avg surf depth: " + avgSurfacingDepth);
+        Debug.Log("Mins to surface: " + swimMinsToSurface);
+        Debug.Log("Number of breaths to surface: " + breathCount);
+        Debug.Log("Avg. pressure during ascent: " + avgPascals);
+        Debug.Log("One breath avg. vol: " + totalBreathVol);
+        Debug.Log("Ascent gas mass: " + ascentGasMass);
+        Debug.Log("-------------");
         */
-        return ascentGasMass;
+        return (float)ascentGasMass;
     }
 
 
     // Returns mass of gas used during a stop.
     float StopGasMass(float stopDuration, float depth)
     {
-        float breathCount = stopDuration * breathsPerMin;
-        float breathVol = (diveSettings.RMV / breathsPerMin) * PressureAtDepth(_waterSurface - depth) / 1000f;
-        float stopGasMass = GasMassAtSurfacePress(breathVol) * breathCount;
-        return stopGasMass;
+        double pascals = PressureAtDepth(_waterSurface - depth);
+        float  breathCount = stopDuration * breathsPerMin;
+        double  totalBreathVol = (diveSettings.RMV / breathsPerMin) * breathCount / 1000d;
+        double stopGasMass = VanDerWall_Mass( pascals,                             // kg, Total mass of stop air.
+                                              CelciusToKelvin(diveSettings.waterTemp),
+                                              totalBreathVol
+                                             );
+        return (float)stopGasMass;
     }
 
 
     // Time left at current depth.
-    float TimeAtDepth(float massOfGasToUse)
+    float TimeAtDepth(double massOfGasToUse)
     {
-
-        float bars = PressureAtDepth(_VRCamera.position.y) / 1000f;   // bar, Pressure at current depth.
-        // Diver air volume per breath * bars. Gives equivalent surface volume, for 1 breath.
-        float breathVol = (diveSettings.RMV / breathsPerMin) * bars;
-        float breathGasMass = GasMassAtSurfacePress(breathVol);
-        /*
-        Debug.Log("Mass of gas to use: " + massOfGasToUse);
-        Debug.Log("Volume of one breath: " + breathVol);
-        Debug.Log("Mass of one breath: " + breathGasMass);
-        */
-        float breathCount = massOfGasToUse / breathGasMass;     // Number of breaths until diver has to begin ascent.
-        float oneBreathTime = 60f / breathsPerMin;              // s, duration of 1 breath.
+        double pascals = PressureAtDepth(_VRCamera.position.y);          // pascal, Pressure at current depth.
+        double oneBreathVol = (diveSettings.RMV / breathsPerMin / 1000d);
+        double oneBreathGasMass = VanDerWall_Mass( pascals,              // kg, mass of air used.
+                                                   CelciusToKelvin(diveSettings.waterTemp),
+                                                   oneBreathVol
+                                                 );
+        float breathCount = (float)(massOfGasToUse / oneBreathGasMass);  // Number of breaths until diver has to begin ascent.
+        float oneBreathTime = 60f / breathsPerMin;                       // s, duration of 1 breath.
         timeAtDepth = breathCount * oneBreathTime;
+        /*
+        Debug.Log("------------------------------------------");
+        Debug.Log("gasRemainingMass:" + gasRemainingMass);
+        Debug.Log("Mass of gas to use: " + massOfGasToUse);
+        Debug.Log("Volume of one breath: " + oneBreathVol);
+        Debug.Log("Mass of one breath: " + oneBreathGasMass);
+        Debug.Log("TimeATDepth: " + timeAtDepth);
+        Debug.Log("------------------------------------------");
+        */
         return timeAtDepth;
     }
 
@@ -424,44 +448,49 @@ public class DiverController : MonoBehaviour
     }
 
 
-    // Water 'net' lift of divers Buoyance Control Device (BCD).
+    // Net. waterlift of divers Buoyance Control Device (BCD).
     float BCD_Buoyancy(float submergence)
     {
-        float bars = PressureAtDepth(_VRCamera.position.y) / 1000f;
-        float BCD_newVolStep = BoyleNewVol(BCDVolStep, bars, diveSettings.atmosphericPressure / 1000f);
-        float deltaMass = GasMassAtSurfacePress(BCD_newVolStep);
-
-
-        if (BCDOldBoyleVol <= diveSettings.BCD_Capacity - BCDVolStep && rightControllerSecondaryButton.action.IsPressed())
+        double pascals = PressureAtDepth(_VRCamera.position.y);
+        float BCD_StepSurfVol = BoyleNewVol(BCDVolStep, (float)pascals, diveSettings.atmosphericPressure * 100);
+        double deltaMass = VanDerWall_Mass( pascals,
+                                            CelciusToKelvin(diveSettings.waterTemp),
+                                            BCDVolStep / 1000d
+                                          );
+        if (BCD_Volume <= diveSettings.BCD_Capacity - BCDVolStep && rightControllerSecondaryButton.action.IsPressed())
         {
             if (BCDControl.bounds.Contains(_leftControllerTransform.position))
             {
                 // Put BCD control code in here to simulate grabbing the real BCd button thingy
             }
-            BCDSurfAirVol += BCD_newVolStep;
-            gasRemainingMass -= deltaMass;
+            BCD_Surf_Vol += BCD_StepSurfVol;
+            if (gasRemainingMass > deltaMass) gasRemainingMass -= deltaMass;
         }
-        if (BCDOldBoyleVol >= BCDVolStep && rightControllerPrimaryButton.action.IsPressed())
+        if (BCD_Volume >= BCDVolStep && rightControllerPrimaryButton.action.IsPressed())
         {
-            BCDSurfAirVol -= BCD_newVolStep;
+            BCD_Surf_Vol -= BCD_StepSurfVol;
         }
-        float BCD_BoyleVolume = BoyleVolAtDepth(_VRCamera.gameObject, BCDSurfAirVol);
-        BCDOldBoyleVol = BCD_BoyleVolume;
 
-        float buoyancy = ((diveSettings.waterDensity / 1000f) * BCD_BoyleVolume - diveSettings.BCD_weight) * g * submergence;
+        // Updating the BCDs volume (depending on depth).
+        if (BoyleVolAtDepth(_VRCamera.gameObject, BCD_Surf_Vol) > diveSettings.BCD_Capacity) {
+            float toRelease = BoyleVolAtDepth(_VRCamera.gameObject, BCD_Surf_Vol) - diveSettings.BCD_Capacity;
+            BCD_Surf_Vol -= BoyleNewVol(toRelease, (float)pascals, diveSettings.atmosphericPressure * 100);
+        }
+        BCD_Volume = BoyleVolAtDepth(_VRCamera.gameObject, BCD_Surf_Vol);
 
+        float buoyancy = ((diveSettings.waterDensity / 1000f) * BCD_Volume - diveSettings.BCD_weight) * g * submergence;
         Vector3 buoyancyForce = new Vector3(0f, buoyancy, 0f);
         _rb.AddForce(buoyancyForce, ForceMode.Force);
         return buoyancy;
     }
 
 
-    // Water 'net' lift of divers tank.
+    // Net. water lift of divers tank.
     float TankBuoyancy(float submergence)
     {
 
         float tankWaterDisp = TankWaterDisp(diveSettings.tankCapacity);             // Volume of displaced water.
-        float buoyancy = ((diveSettings.waterDensity / 1000f) * tankWaterDisp -   // Mass of displaced water.
+        float buoyancy = (float)((diveSettings.waterDensity / 1000f) * tankWaterDisp -   // Mass of displaced water.
                            (diveSettings.tankEmptyWeight + gasRemainingMass)        // Mass of tank and its remaining gas.
                          ) * g * submergence;                                       // = Buoyancy in Newton.
 
@@ -471,7 +500,7 @@ public class DiverController : MonoBehaviour
     }
 
 
-    // Water lift of lead
+    // Net. water lift of lead.
     float LeadBuoyancy(float submergence)
     {
         float leadDensity = 11.34f;                                                 // kg/liter
@@ -510,77 +539,89 @@ public class DiverController : MonoBehaviour
     // =================================================================================
     // Helper functions
     // =================================================================================
-    float BarToPSI(float bar)
-    {
-        return bar * 14.50377f;
+    float CelciusToKelvin(float celcius) {
+        return 273.15f + celcius;
     }
 
-
-    float PSItoBar(float PSI)
-    {
-        return PSI * 0.06895f;
-    }
-
-
-    float CuFtToLiter(float cuFt)
-    {
-        float liters = 0f;
-        float oneFoot = 3.048f; // Deci meters.
-        float oneCubicFootInLiters = Mathf.Pow(oneFoot, 3f);
-        liters = cuFt * oneCubicFootInLiters;
-        return liters;
-    }
-
-
-    float BarToPascal(float bar)
+    double BarToPascal(double bar)
     {
         return bar * 100000f;
     }
 
-
-    float PascalToBar(float pascal)
+    double PascalToBar(double pascal)
     {
         return pascal / 100000f;
     }
 
 
-    // Using the equation for an ideal gas to calculate density.
-    float GasDensity(float pressureInBar)
-    {
-        const float MM_air = 29f;                       // Molar mass of atmospheric air.
-        float P = BarToPascal(pressureInBar);           // Pressure in Pascal
-        const float R = 8314.46f;                       // Ideal gas constant.
-        float T = 273.15f + diveSettings.waterTemp;     // Water temperature in Kelvin
-        float density = (MM_air * P) / (R * T);         // Formula derived from ideal gas equation
-        return density;
+    // Using the Van Der Wall equation.
+    double VanDerWall_Mass(double P, double T, double V) {
+        // M, A, B for atmospheric air.
+        const double M = 0.0289647d;   //  kg/mol,     Molar mass.         
+        const double A = 0.1358d;      //  J/(mol*K),  Attraction between particles.
+        const double B = 0.0000364d;   //  m3/mol,     Volume excluded by a mole of particles.
+        const double R = 8.3144621d;   //              Gas constant.    
+
+        // When the 'Van Der Wall' equation is put in the form of a 3rd deg. polynomium,
+        // with n (number of moles) as the unknown,
+        // then a, b ,c, d signifies the coefficients of the polynomium.
+        double a = - (A * B) / Math.Pow(V, 2d);
+        double b = A / V;
+        double c = - (B * P  +  R * T);
+        double d = P * V;
+
+        // USING THE QUBIC FORMULA:
+        // -----------------------------------------------------------------------------------
+        // Simplifying by creating three expressions which is repetivive in the qubic formula.
+        double exp1 = (  -Math.Pow(b, 3d) / (27d * Math.Pow(a, 3d)) +
+                        (b * c) / (6d * Math.Pow(a, 2d)) -
+                        d / (2d * a)
+                      );
+        double exp2 = ( c / (3d * a) -
+                       Math.Pow(b, 2d) / (9d * Math.Pow(a, 2d))  
+                      );
+        double exp3 = b / (3d * a);
+
+        // Deriving the root (n = number of moles) of the polynomium, using the qubic formula.
+        double n = CubicRoot( exp1 +
+                             Math.Sqrt( Math.Pow(exp1, 2d) + 
+                                        Math.Pow(exp2, 3d)
+                                      )
+                            ) +
+
+                   CubicRoot( exp1 -
+                             Math.Sqrt( Math.Pow(exp1, 2d) +
+                                        Math.Pow(exp2, 3d)
+                                      )
+                            ) -
+                   exp3;
+        // -----------------------------------------------------------------------------------
+
+        // Now we can calculate the gas mass.
+        double gasMass = n * M;
+        return gasMass;
     }
 
 
-    // Using the equation for an ideal gas to calculate mass
-    float GasMassAtSurfacePress(float literVolume)
-    {
-        float V = literVolume / 1000f;                      // m3
-        float P = BarToPascal(diveSettings.atmosphericPressure / 1000f);    // Pascal
-        const float MM_air = 29f;                           // Molar mass of atmospheric air.
-
-        const float R = 8314.46f;                           // Ideal gas constant.
-        float T = 273.15f + diveSettings.waterTemp;                      // Water temperature in Kelvin
-        float mass = (P * V * MM_air) / (R * T);            // Formula derived from ideal gas equation
-        return mass;
+    double VanDerWall_Press(double m, double T, double V) {
+        // M, A, B for atmospheric air.
+        const double M = 0.0289647d;   //  kg/mol,     Molar mass.         
+        const double A = 0.1358d;      //  J/(mol*K),  Attraction between particles.
+        const double B = 0.0000364d;   //  m3/mol,     Volume excluded by a mole of particles.
+        const double R = 8.3144621d;   //              Gas constant.    
+        double n = m / M;
+        double gasPress = (n * R * T) / (V - n * B) - A * Math.Pow(n, 2d) / Math.Pow(V, 2d);
+        return PascalToBar(gasPress);
     }
 
 
-    float TankPressure(float remainingGasMassInKg)
+    // c# does not support cubic root of neative numbers, this funtion does.
+    private double CubicRoot(double x)
     {
-        float m = remainingGasMassInKg;
-        const float R = 8314.46f;                           // Ideal gas constant.
-        float T = 273.15f + diveSettings.waterTemp;         // Kelvin, Water temperature.
-
-        float V = diveSettings.tankCapacity / 1000f;        // m3, tank capatity.
-        const float MM_air = 29f;                           // Molar mass of atmospheric air.
-
-        float P = (m * R * T) / (V * MM_air);
-        return PascalToBar(P);
+        if (x < 0)
+            return -Math.Pow(-x, 1d / 3d);
+        else
+            return Math.Pow(x, 1d / 3d);
     }
 
 
@@ -598,21 +639,17 @@ public class DiverController : MonoBehaviour
 
 
     // Using Boyles equation p1*v1 = p2*v2
-    float BoyleNewPress(float oldPress, float oldVol, float newVol)
-    {
-        return oldPress * (oldVol / newVol);    // A new pressure
-    }
-
     float BoyleNewVol(float oldVol, float oldPress, float newPress)
     {
         return oldVol * (oldPress / newPress);    // A new volume
     }
 
 
+    // Volume compared to surface.
     float BoyleVolAtDepth(GameObject GO, float surfaceVol)
     {
         float yPos = GO.transform.position.y;
-        return surfaceVol * diveSettings.atmosphericPressure / PressureAtDepth(yPos);   // A new volume
+        return surfaceVol * (100 * diveSettings.atmosphericPressure) / PressureAtDepth(yPos);   // A new volume
     }
 
 
@@ -624,7 +661,6 @@ public class DiverController : MonoBehaviour
     }
 
 
-
     // Pressure of water pillar.
     float PressureAtDepth(float yPos)
     {
@@ -632,6 +668,7 @@ public class DiverController : MonoBehaviour
         float pressure = Depth(yPos) * diveSettings.waterDensity * g;    // In pascal.
         pressure /= 100f;                                                // In hPa (same as mBar).
         pressure += diveSettings.atmosphericPressure;                    // In hPa (same as mBar).
+        pressure *= 100f;                                                // In pascal.       
         return pressure;
     }
     // =================================================================================

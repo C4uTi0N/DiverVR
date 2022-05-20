@@ -11007,6 +11007,34 @@ PrefabInstance:
       propertyPath: _waterBody
       value: 
       objectReference: {fileID: 226858686}
+    - target: {fileID: 3722520872711199985, guid: 481215c08a681f24f8abf89d4532ea50, type: 3}
+      propertyPath: depthValue
+      value: 
+      objectReference: {fileID: 8844228644706790120}
+    - target: {fileID: 3722520872711199985, guid: 481215c08a681f24f8abf89d4532ea50, type: 3}
+      propertyPath: localTimeValue
+      value: 
+      objectReference: {fileID: 8844228644830819480}
+    - target: {fileID: 3722520872711199985, guid: 481215c08a681f24f8abf89d4532ea50, type: 3}
+      propertyPath: BCD_AirVolValue
+      value: 
+      objectReference: {fileID: 106953741}
+    - target: {fileID: 3722520872711199985, guid: 481215c08a681f24f8abf89d4532ea50, type: 3}
+      propertyPath: netBuoyancyValue
+      value: 
+      objectReference: {fileID: 8844228644418433467}
+    - target: {fileID: 3722520872711199985, guid: 481215c08a681f24f8abf89d4532ea50, type: 3}
+      propertyPath: timeAtDepthValue
+      value: 
+      objectReference: {fileID: 8844228642925848718}
+    - target: {fileID: 3722520872711199985, guid: 481215c08a681f24f8abf89d4532ea50, type: 3}
+      propertyPath: diveDurationValue
+      value: 
+      objectReference: {fileID: 8844228643505211055}
+    - target: {fileID: 3722520872711199985, guid: 481215c08a681f24f8abf89d4532ea50, type: 3}
+      propertyPath: tankPressureValue
+      value: 
+      objectReference: {fileID: 8844228644332988191}
     - target: {fileID: 7937069120120368882, guid: 481215c08a681f24f8abf89d4532ea50, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -12785,7 +12813,7 @@ Canvas:
   m_Enabled: 1
   serializedVersion: 3
   m_RenderMode: 1
-  m_Camera: {fileID: 0}
+  m_Camera: {fileID: 6446300871085319070}
   m_PlaneDistance: 2
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
