@@ -125,8 +125,7 @@ public class DiverController : MonoBehaviour
     }
 
 
-    private void FixedUpdate()
-    {
+    private void FixedUpdate() {
         if (playerPaused) {
             if (_actionBasedContinuousMoveProvider.enabled == true) {
                 _actionBasedContinuousMoveProvider.enabled = false;
@@ -139,7 +138,6 @@ public class DiverController : MonoBehaviour
                 _actionBasedContinuousMoveProvider.enabled = true;
                 _rb.velocity = diverOldVelocity;
             }
-
             buoyancy = ApplyGravity(_rb);        // Always apply gravity.
 
             // Submergence controls the beginning of the dive.
@@ -148,7 +146,8 @@ public class DiverController : MonoBehaviour
             // Here the dive is started and stopped.
             if (submergence > 0) {
                 diveGoingOn = true;                     
-                if (_actionBasedContinuousMoveProvider.enableStrafe == true) _actionBasedContinuousMoveProvider.enableStrafe = false;
+                if (_actionBasedContinuousMoveProvider.enableStrafe == true)
+                    _actionBasedContinuousMoveProvider.enableStrafe = false;
             }
             else if (diveGoingOn) {
                 diveGoingOn = false;
@@ -158,22 +157,17 @@ public class DiverController : MonoBehaviour
 
             // Updating timers.
             userDataUpdTimer += Time.deltaTime;
-            if (diveGoingOn)
-            {
+            if (diveGoingOn) {
                 breathTimer += Time.deltaTime;
                 diveTime += Time.deltaTime;
             }
-
             // Taking a breath (if the timer is running).
-            if (breathTimer > breathCooldown)
-            {
+            if (breathTimer > breathCooldown) {
                 breathTimer = 0;
                 TakeBreath();
             }
-
             // Updating water drag and buoyancy if the dive has begun.
-            if (diveGoingOn)
-            {
+            if (diveGoingOn) {
                 Drag(_rb, submergence);
                 buoyancy += BodyBuoyancy(_rb, submergence);
                 buoyancy += SuitBuoyancy(submergence);
@@ -181,13 +175,10 @@ public class DiverController : MonoBehaviour
                 buoyancy += TankBuoyancy(submergence);
                 buoyancy += LeadBuoyancy(submergence);
             }
-
             // Allowing swim movement if more than half submerged.
             if (submergence > 0.5f) SwimMovement();
-
             // Updating data for UI
-            if (userDataUpdTimer > userDataCooldown)
-            {
+            if (userDataUpdTimer > userDataCooldown) {
                 userDataUpdTimer = 0;
 
                 // Calculating max stay-time at current depth.
@@ -196,15 +187,11 @@ public class DiverController : MonoBehaviour
                 double gasEndMass = VanDerWall_Mass(BarToPascal(safetyEndPress),
                                                     CelciusToKelvin(diveSettings.waterTemp),
                                                     diveSettings.tankCapacity / 1000d);
-
                 double gasToUseMass = gasRemainingMass - gasEndMass;
-
                 // Subtracting mass of gas used during ascent.
                 gasToUseMass -= AscentGasMass();
-
                 // Subtracting mass of gas used during 5min safety stop at 5m.
                 gasToUseMass -= StopGasMass(5f, 5f);
-
                 // We can now calculate remaining time at current depth.
                 timeAtDepth = TimeAtDepth(gasToUseMass);
                 // ============================================
@@ -213,7 +200,6 @@ public class DiverController : MonoBehaviour
                 UpdateUserData();
             }
         }
-
     }
 
 
@@ -285,8 +271,6 @@ public class DiverController : MonoBehaviour
             maxDepth = Mathf.RoundToInt(depth);
         }
         maxDepthStr = maxDepth.ToString();
-
-
 
         /*
         Debug.Log("Time: " + timeStr);
@@ -453,10 +437,7 @@ public class DiverController : MonoBehaviour
     {
         double pascals = PressureAtDepth(_VRCamera.position.y);
         float BCD_StepSurfVol = BoyleNewVol(BCDVolStep, (float)pascals, diveSettings.atmosphericPressure * 100);
-        double deltaMass = VanDerWall_Mass( pascals,
-                                            CelciusToKelvin(diveSettings.waterTemp),
-                                            BCDVolStep / 1000d
-                                          );
+
         if (BCD_Volume <= diveSettings.BCD_Capacity - BCDVolStep && rightControllerSecondaryButton.action.IsPressed())
         {
             if (BCDControl.bounds.Contains(_leftControllerTransform.position))
@@ -464,6 +445,10 @@ public class DiverController : MonoBehaviour
                 // Put BCD control code in here to simulate grabbing the real BCd button thingy
             }
             BCD_Surf_Vol += BCD_StepSurfVol;
+            double deltaMass = VanDerWall_Mass(pascals,
+                                    CelciusToKelvin(diveSettings.waterTemp),
+                                    BCDVolStep / 1000d
+                                  );
             if (gasRemainingMass > deltaMass) gasRemainingMass -= deltaMass;
         }
         if (BCD_Volume >= BCDVolStep && rightControllerPrimaryButton.action.IsPressed())
@@ -471,11 +456,12 @@ public class DiverController : MonoBehaviour
             BCD_Surf_Vol -= BCD_StepSurfVol;
         }
 
-        // Updating the BCDs volume (depending on depth).
+        // Checking if BCD have expanded beyond capacity. In that case releasing surplus.
         if (BoyleVolAtDepth(_VRCamera.gameObject, BCD_Surf_Vol) > diveSettings.BCD_Capacity) {
             float toRelease = BoyleVolAtDepth(_VRCamera.gameObject, BCD_Surf_Vol) - diveSettings.BCD_Capacity;
             BCD_Surf_Vol -= BoyleNewVol(toRelease, (float)pascals, diveSettings.atmosphericPressure * 100);
         }
+        // Updating the BCDs volume (depending on depth).
         BCD_Volume = BoyleVolAtDepth(_VRCamera.gameObject, BCD_Surf_Vol);
 
         float buoyancy = ((diveSettings.waterDensity / 1000f) * BCD_Volume - diveSettings.BCD_weight) * g * submergence;
@@ -521,7 +507,8 @@ public class DiverController : MonoBehaviour
     {
         float density = diveSettings.waterDensity;      // Kg/m3. Salt water is denser than fresh water.
         float speedSqr = rb.velocity.sqrMagnitude;      // speed squared, of object relative to medium.
-        const float area = 0.25f;                       // m2, cross-sectional area of moving obj, orthogonal to direction of motion.
+        // m2, cross-sectional area of moving obj, orthogonal to direction of motion.
+        const float area = 0.25f;
         const float dragCoeff = 0.7f;                   // Higher -> less aerodynamic
         float dragForce = 0.5f * density * speedSqr * area * dragCoeff;
 
@@ -664,7 +651,6 @@ public class DiverController : MonoBehaviour
     // Pressure of water pillar.
     float PressureAtDepth(float yPos)
     {
-
         float pressure = Depth(yPos) * diveSettings.waterDensity * g;    // In pascal.
         pressure /= 100f;                                                // In hPa (same as mBar).
         pressure += diveSettings.atmosphericPressure;                    // In hPa (same as mBar).
@@ -675,8 +661,7 @@ public class DiverController : MonoBehaviour
     // =================================================================================
 
 
-    private void SwimMovement()
-    {
+    private void SwimMovement() {
         _strokeCooldown += Time.fixedDeltaTime;
 
         // Vertical movement (simulated use of legs) (with left controller y(up) and x(down) buttons)
@@ -701,43 +686,30 @@ public class DiverController : MonoBehaviour
         {
             var leftHandVel = Vector3.zero;     // Velocity of left controller
             var rightHandVel = Vector3.zero;    // Velocity of right controller
-            //var leftHandPos = Vector3.zero;     // Position of left controller
-            //var rightHandPos = Vector3.zero;    // Position of right controller
-
 
             // If either grip button is pressed the controllers velocity is applied
             if (leftControllerGripPress.action.IsPressed())
             {
                 leftHandVel = leftControllerVelocity.action.ReadValue<Vector3>();
-                //leftHandPos = leftControllerPosition.action.ReadValue<Vector3>();
             }
             if (rightControllerGripPress.action.IsPressed())
             {
                 rightHandVel = rightControllerVelocity.action.ReadValue<Vector3>();
-                //rightHandPos = rightControllerPosition.action.ReadValue<Vector3>();
             }
 
             Vector3 handVel = leftHandVel + rightHandVel;   //  Combined velocity vector of both hands
-            //Vector3 handPos = new Vector3( (leftHandPos.x + rightHandPos.x)/2, (leftHandPos.y + rightHandPos.y) / 2, (leftHandPos.z + rightHandPos.z)/ 2);
             handVel *= -1;  // * -1 because we are swimming in the opposite direction of the hand movement
-
-            //Debug.Log("BodyPos: " + _rb.transform.position);
-            //Debug.Log("HandPos: " + handPos);
 
             // Comparing velocity magnitude (squared (less processing)) with minimum force
             if (handVel.sqrMagnitude > minForce * minForce)
             {
-                // Vector3 direction = _rb.transform.position - transform.position; //EXP #######################################
-                Vector3 worldVel = _XROrigin.TransformDirection(handVel);    // Transforming the hands velocity from local space to world space
-                //Vector3 worldPos = _XROrigin.TransformDirection(handPos);
-                //Debug.Log("HandWorldPos: " + worldPos);
-                //_rb.AddForceAtPosition(worldVel * swimForce, worldPos, ForceMode.Acceleration); // EXP
-                _rb.AddForce(worldVel * swimForce, ForceMode.Acceleration); // Applying force to the diver
+                // Transforming the hands velocity from local space to world space
+                Vector3 worldVel = _XROrigin.TransformDirection(handVel);
+                // Applying force to the diver
+                _rb.AddForce(worldVel * swimForce, ForceMode.Acceleration);
                 _strokeCooldown = 0f;
             }
         }
-
-
     }
 
 }
