@@ -5042,8 +5042,8 @@ MonoBehaviour:
   minStrokeInterval: 0
   _strokeCooldown: 0
   submergence: 0
-  BCDOldBoyleVol: 0
-  BCDSurfAirVol: 0
+  BCD_Volume: 0
+  BCD_Surf_Vol: 0
   BCDVolStep: 0.015
   timeStr: 
   diveTimeStr: 00h00m00s
@@ -5074,6 +5074,7 @@ MonoBehaviour:
   rightControllerPosition: {fileID: -3326005586356538449, guid: c348712bda248c246b8c49b3db54643f, type: 3}
   rightControllerPrimaryButton: {fileID: 2798172787534692748, guid: c348712bda248c246b8c49b3db54643f, type: 3}
   rightControllerSecondaryButton: {fileID: 9075488603743133883, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  rightControllerThumbStickButton: {fileID: 7746621822425601740, guid: c348712bda248c246b8c49b3db54643f, type: 3}
 --- !u!1 &4025301569944293928
 GameObject:
   m_ObjectHideFlags: 0

@@ -338,14 +338,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 185243415164017269, guid: 481215c08a681f24f8abf89d4532ea50, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 185243415164017269, guid: 481215c08a681f24f8abf89d4532ea50, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 3722520872711199884, guid: 481215c08a681f24f8abf89d4532ea50, type: 3}
       propertyPath: m_Name
       value: PlayerRig (XR Origin)
@@ -426,18 +418,6 @@ PrefabInstance:
       propertyPath: tankPressureValue
       value: 
       objectReference: {fileID: 8844228644332988191}
-    - target: {fileID: 7937069120120368882, guid: 481215c08a681f24f8abf89d4532ea50, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7937069120120368882, guid: 481215c08a681f24f8abf89d4532ea50, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7937069120120368882, guid: 481215c08a681f24f8abf89d4532ea50, type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 481215c08a681f24f8abf89d4532ea50, type: 3}
 --- !u!20 &259910482 stripped

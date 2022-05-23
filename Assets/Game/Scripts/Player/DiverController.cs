@@ -44,6 +44,10 @@ public class DiverController : MonoBehaviour
     float safetyEndPress = 35f;             // bar, Minimum pressure to surface with (equivalent to 500 PSI).
     float ascentMaxMtrPerMin = 10f;         // m, Maximum meters/min when ascending.
     float buoyancy = 0f;
+    // BCD dump
+    bool BCD_DumpInProgress = false;
+    float BCD_DumpStep = 0;
+    int BCD_DumpCounter = 0;
 
     // User data variables
     bool diveGoingOn = false;               // Has the dive begun?
@@ -106,6 +110,7 @@ public class DiverController : MonoBehaviour
     [SerializeField] InputActionReference rightControllerPosition;
     [SerializeField] InputActionReference rightControllerPrimaryButton;
     [SerializeField] InputActionReference rightControllerSecondaryButton;
+    [SerializeField] InputActionReference rightControllerThumbStickButton;
     #endregion
 
 
@@ -168,6 +173,16 @@ public class DiverController : MonoBehaviour
             }
             // Updating water drag and buoyancy if the dive has begun.
             if (diveGoingOn) {
+                if (BCD_DumpInProgress) {
+                    if (BCD_DumpCounter < 50)
+                    {
+                        BCD_Surf_Vol -= BCD_DumpStep;
+                        BCD_DumpCounter++;
+                    }
+                    else {
+                        BCD_DumpInProgress = false;
+                    }
+                }
                 Drag(_rb, submergence);
                 buoyancy += BodyBuoyancy(_rb, submergence);
                 buoyancy += SuitBuoyancy(submergence);
@@ -435,25 +450,32 @@ public class DiverController : MonoBehaviour
     // Net. waterlift of divers Buoyance Control Device (BCD).
     float BCD_Buoyancy(float submergence)
     {
+        if (!BCD_DumpInProgress && rightControllerThumbStickButton.action.IsPressed()) {
+            BCD_DumpInProgress = true;
+            BCD_DumpStep = BCD_Surf_Vol / 50f;
+            BCD_DumpCounter = 0;
+        }
+
         double pascals = PressureAtDepth(_VRCamera.position.y);
         float BCD_StepSurfVol = BoyleNewVol(BCDVolStep, (float)pascals, diveSettings.atmosphericPressure * 100);
-
-        if (BCD_Volume <= diveSettings.BCD_Capacity - BCDVolStep && rightControllerSecondaryButton.action.IsPressed())
-        {
-            if (BCDControl.bounds.Contains(_leftControllerTransform.position))
+        if (!BCD_DumpInProgress) {
+            if (BCD_Volume <= diveSettings.BCD_Capacity - BCDVolStep && rightControllerSecondaryButton.action.IsPressed())
             {
-                // Put BCD control code in here to simulate grabbing the real BCd button thingy
+                if (BCDControl.bounds.Contains(_leftControllerTransform.position))
+                {
+                    // Put BCD control code in here to simulate grabbing the real BCd button thingy
+                }
+                BCD_Surf_Vol += BCD_StepSurfVol;
+                double deltaMass = VanDerWall_Mass(pascals,
+                                        CelciusToKelvin(diveSettings.waterTemp),
+                                        BCDVolStep / 1000d
+                                      );
+                if (gasRemainingMass > deltaMass) gasRemainingMass -= deltaMass;
             }
-            BCD_Surf_Vol += BCD_StepSurfVol;
-            double deltaMass = VanDerWall_Mass(pascals,
-                                    CelciusToKelvin(diveSettings.waterTemp),
-                                    BCDVolStep / 1000d
-                                  );
-            if (gasRemainingMass > deltaMass) gasRemainingMass -= deltaMass;
-        }
-        if (BCD_Volume >= BCDVolStep && rightControllerPrimaryButton.action.IsPressed())
-        {
-            BCD_Surf_Vol -= BCD_StepSurfVol;
+            if (BCD_Volume >= BCDVolStep && rightControllerPrimaryButton.action.IsPressed())
+            {
+                BCD_Surf_Vol -= BCD_StepSurfVol;
+            }
         }
 
         // Checking if BCD have expanded beyond capacity. In that case releasing surplus.

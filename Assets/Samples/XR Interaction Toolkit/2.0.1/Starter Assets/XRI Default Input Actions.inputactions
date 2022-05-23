@@ -856,6 +856,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "ThumbStick Press",
+                    "type": "Button",
+                    "id": "c86dd132-4770-4d00-a60a-51caca6e02e0",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -1034,6 +1043,17 @@
                     "action": "Translate Anchor",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "bb12daff-0c8f-4b03-bc2d-0a6b153d948f",
+                    "path": "<OculusTouchController>{RightHand}/thumbstickClicked",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ThumbStick Press",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
