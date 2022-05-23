@@ -61,7 +61,8 @@ public class DiverController : MonoBehaviour
     float diveTime;                         // s, Time elapsed since the dive began.
     float depth;                            // m, current diver depth
     int maxDepth;                           // m, max depth reached
-    double tankPress;                        // bar, current pressure in tank
+
+    public double tankPress;                        // bar, current pressure in tank
     float timeAtDepth;                      // s, The time left at current depth, (with time to surface subtracted).
     Vector3 diverOldVelocity;               // Velocity of diver, before the dive was paused
     #endregion                              // Note: the above is not NDL (No Decompression Limit)

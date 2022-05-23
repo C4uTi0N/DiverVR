@@ -338,9 +338,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 185243415164017269, guid: 481215c08a681f24f8abf89d4532ea50, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 185243415164017269, guid: 481215c08a681f24f8abf89d4532ea50, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3722520872711199884, guid: 481215c08a681f24f8abf89d4532ea50, type: 3}
       propertyPath: m_Name
       value: PlayerRig (XR Origin)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3722520872711199884, guid: 481215c08a681f24f8abf89d4532ea50, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3722520872711199886, guid: 481215c08a681f24f8abf89d4532ea50, type: 3}
       propertyPath: m_RootOrder
@@ -418,6 +430,18 @@ PrefabInstance:
       propertyPath: tankPressureValue
       value: 
       objectReference: {fileID: 8844228644332988191}
+    - target: {fileID: 7937069120120368882, guid: 481215c08a681f24f8abf89d4532ea50, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7937069120120368882, guid: 481215c08a681f24f8abf89d4532ea50, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7937069120120368882, guid: 481215c08a681f24f8abf89d4532ea50, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 481215c08a681f24f8abf89d4532ea50, type: 3}
 --- !u!20 &259910482 stripped
@@ -1277,7 +1301,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh98388
+  m_Name: pb_Mesh57600
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -1456,7 +1480,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5873792316326926830, guid: c5a4ef31c02a8fa4dadc7dfbf3e02d8a, type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 5873792316326926830, guid: c5a4ef31c02a8fa4dadc7dfbf3e02d8a, type: 3}
       propertyPath: m_AnchorMax.x
@@ -1539,6 +1563,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1068231355, guid: cc8bb205ae245a549b2047a26b16c4fb, type: 3}
+      propertyPath: diverController
+      value: 
+      objectReference: {fileID: 283799327}
+    - target: {fileID: 5866780800400562345, guid: cc8bb205ae245a549b2047a26b16c4fb, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7274591722214012175, guid: cc8bb205ae245a549b2047a26b16c4fb, type: 3}
       propertyPath: diverController
       value: 
@@ -1557,7 +1589,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7274591722640960298, guid: cc8bb205ae245a549b2047a26b16c4fb, type: 3}
       propertyPath: m_RootOrder
-      value: 5
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 7274591722640960298, guid: cc8bb205ae245a549b2047a26b16c4fb, type: 3}
       propertyPath: m_AnchorMax.x
@@ -1640,6 +1672,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7274591724319480961, guid: cc8bb205ae245a549b2047a26b16c4fb, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7588182615477451340, guid: cc8bb205ae245a549b2047a26b16c4fb, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
       objectReference: {fileID: 0}
