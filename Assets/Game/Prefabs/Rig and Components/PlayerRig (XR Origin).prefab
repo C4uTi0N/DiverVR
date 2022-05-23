@@ -5042,9 +5042,10 @@ MonoBehaviour:
   minStrokeInterval: 0
   _strokeCooldown: 0
   submergence: 0
-  BCDOldBoyleVol: 0
-  BCDSurfAirVol: 0
+  BCD_Volume: 0
+  BCD_Surf_Vol: 0
   BCDVolStep: 0.015
+  buoyancy: 0
   timeStr: 
   diveTimeStr: 00h00m00s
   depthStr: 

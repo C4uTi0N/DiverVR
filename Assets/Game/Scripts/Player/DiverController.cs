@@ -32,6 +32,7 @@ public class DiverController : MonoBehaviour
     public float BCD_Surf_Vol = 0;         // l, Volume BCD will assume if brought to surface.     
     public float BCDVolStep = 0.030f;      // l, Air added to BCD per step (fixed update).
 
+
     #region Private Variables
     // Breath
     int breathsPerMin = 6;
@@ -43,7 +44,7 @@ public class DiverController : MonoBehaviour
     double gasRemainingMass;
     float safetyEndPress = 35f;             // bar, Minimum pressure to surface with (equivalent to 500 PSI).
     float ascentMaxMtrPerMin = 10f;         // m, Maximum meters/min when ascending.
-    float buoyancy = 0f;
+    public float buoyancy = 0f;             // gjort public for at tilgå fra slider. SKAL DEN FLYTTES?
 
     // User data variables
     bool diveGoingOn = false;               // Has the dive begun?
