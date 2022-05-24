@@ -14,17 +14,17 @@ public class DiverController : MonoBehaviour
     public bool playerPaused = false;
 
     public DiveSettings diveSettings;
-    public Collider BCDControl;
 
     private const float g = 9.82f;         // Gravitational constant
     private float _waterSurface;
 
     [Header("Swimming Variables")]
-    public float swimForce = 1.5f;           // Force of strokes
+    public float swimForce = 1.5f;         // Force of strokes
     public float minForce = 0f;            // Min force for a stroke to be registered (default 0.25)
     public float minStrokeInterval = 0f;   // Min time between strokes (default 0.25)
     public float _strokeCooldown;          // Timer which is reset to 0 at each stroke
     public float submergence = 0;          // How much of the diver is submerged (a bit fictive as of now, it's relative to the VR-headset position)
+    public float ascentRate;               // Current ascent rate of player
 
 
     [Header("BCD Variables")]
@@ -75,7 +75,7 @@ public class DiverController : MonoBehaviour
     public string tankPressStr;
     public string timeAtDepthStr = "00h00m";
     public string maxDepthStr;
-    public float ascentRate;
+    
 
 
     [Header("Object References")]
@@ -145,7 +145,9 @@ public class DiverController : MonoBehaviour
                 _actionBasedContinuousMoveProvider.enabled = true;
                 _rb.velocity = diverOldVelocity;
             }
-            buoyancy = ApplyGravity(_rb);        // Always apply gravity.
+
+            buoyancy = ApplyGravity(_rb);           // Always apply gravity.
+            ascentRate = _rb.velocity.y;
 
             // Submergence controls the beginning of the dive.
             submergence = PlayerSubmergence(_VRCamera.gameObject);    // Degree of submergence.
@@ -257,7 +259,7 @@ public class DiverController : MonoBehaviour
         if (localTimeValue != null) { localTimeValue.text = timeStr; }
         
 
-        // Dive time (måske bare mm)
+        // Dive time (mï¿½ske bare mm)
         TimeSpan ts1 = TimeSpan.FromSeconds(diveTime);
         diveTimeStr = ts1.ToString(@"mm");
         if (diveDurationValue != null) { diveDurationValue.text = diveTimeStr; }
@@ -270,7 +272,7 @@ public class DiverController : MonoBehaviour
         tankPressStr = tankPress.ToString("0.0") + " bar";
         if (tankPressureValue != null) { tankPressureValue.text = tankPressStr; }
 
-        // Time left at depth (måske mmm:ss)
+        // Time left at depth (mï¿½ske mmm:ss)
         int mins = (int)(timeAtDepth / 60);
         int secs = (int)timeAtDepth % 60;
         timeAtDepthStr = mins.ToString();
@@ -524,7 +526,7 @@ public class DiverController : MonoBehaviour
         _rb.AddForce(buoyancyForce, ForceMode.Force);                               // Applying force.
         return buoyancy;
     }
-
+    
 
     // Calculating drag coefficient by the formula:  d = 1/2 * d * v^2 * A * Cd
     void Drag(Rigidbody rb, float submergence)

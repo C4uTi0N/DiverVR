@@ -15,6 +15,7 @@ public class DiveSettings : ScriptableObject {
     [Range(20, 200)] public float diverWeight = 80f;          // kg
     [Range(10, 20)] public float RMV = 15f;                   // l, Respiratory minute volume
     [Range(1, 10)] public float suitThickness = 5f;           // mm
+    [Range(1, 18)] public float maxAscentRate = 10;           // m/min
 
     public enum tankMaterials { Aluminium, Steel };
     public tankMaterials tankMaterial = tankMaterials.Steel;  // Aluminium or Steel

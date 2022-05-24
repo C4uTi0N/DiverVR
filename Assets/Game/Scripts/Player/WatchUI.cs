@@ -4,8 +4,11 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
+[RequireComponent(typeof(AudioSource))]
 public class WatchUI : MonoBehaviour
 {
+    AudioSource alarm;
+
     [Header("Buttons")]
     public Button mODEButton;
     public Button sELECTButton;
@@ -33,13 +36,22 @@ public class WatchUI : MonoBehaviour
     public DiverController diverController;
     public DiveSettings diveSettings;
 
-    float maxAscentRate = 1.667f;           // max ascent rate of 10 meters pr minute
-    float timeLimit = 5;
+    float maxAscentRate;
     float timer = 0;
+    public float stopTime = 60;
+    public float timeLimit = 5;
+    bool alarmPlayed = false;
+
 
     private void Start()
     {
+        alarm = GetComponent<AudioSource>();
         btnSetup();
+
+        maxAscentRate = diveSettings.maxAscentRate / 60;
+        ascentRateIndicatorSlider.maxValue = maxAscentRate;
+        print("Max Acent Rate is: " + maxAscentRate);
+
     }
 
 
@@ -119,12 +131,36 @@ public class WatchUI : MonoBehaviour
         if (diverController.ascentRate > maxAscentRate)
         {
             timer += Time.deltaTime;
-            if (timer >= timeLimit)
+            //print("Ascent Rate: " + diverController.ascentRate + " | Timer: " + timer);
+            if (!alarmPlayed && timer >= timeLimit)
             {
-                // Mandatory stop
-                Debug.Log("Ascent rate violation!... Mandatory stop need");
+                alarm.Play();
+                alarmPlayed = true;
+                print("Ascent rate violation!... Mandatory stop need");
+                timer = 0;
             }
         }
-        else { timer = 0; }
+        else if (diverController.ascentRate > 0.001)
+        {
+            timer = 0;
+        }
+        
+        if (alarmPlayed)
+        {
+            if (diverController.ascentRate <= 0.01)
+            {
+                timer += Time.deltaTime;
+                if (timer >= stopTime)
+                {
+                    alarmPlayed = false;
+                    print("Mandatory stop completed");
+                    timer = 0;
+                }
+            }
+            if (diverController.ascentRate > 0.005)
+            {
+                if (!alarm.isPlaying) { alarm.PlayDelayed(0.15f); }
+            }
+        }
     }
 }
