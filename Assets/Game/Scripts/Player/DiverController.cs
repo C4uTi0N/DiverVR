@@ -467,7 +467,7 @@ public class DiverController : MonoBehaviour
                 {
                     // Put BCD control code in here to simulate grabbing the real BCd button thingy
                 }
-                BCD_Surf_Vol += BCD_StepSurfVol;
+                BCD_Surf_Vol += BCD_StepSurfVol*1.5f;
                 double deltaMass = VanDerWall_Mass(pascals,
                                         CelciusToKelvin(diveSettings.waterTemp),
                                         BCDVolStep / 1000d
@@ -476,7 +476,7 @@ public class DiverController : MonoBehaviour
             }
             if (BCD_Volume >= BCDVolStep && rightControllerPrimaryButton.action.IsPressed())
             {
-                BCD_Surf_Vol -= BCD_StepSurfVol;
+                BCD_Surf_Vol -= BCD_StepSurfVol*2.5f;
             }
         }
 

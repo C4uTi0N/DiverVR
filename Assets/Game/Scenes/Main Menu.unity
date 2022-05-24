@@ -1005,7 +1005,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh43198
+  m_Name: pb_Mesh18464
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -1267,34 +1267,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 126462749, guid: cc8bb205ae245a549b2047a26b16c4fb, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 1068231355, guid: cc8bb205ae245a549b2047a26b16c4fb, type: 3}
       propertyPath: diverController
       value: 
       objectReference: {fileID: 283799327}
-    - target: {fileID: 1158325842, guid: cc8bb205ae245a549b2047a26b16c4fb, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1285702272, guid: cc8bb205ae245a549b2047a26b16c4fb, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1762152712, guid: cc8bb205ae245a549b2047a26b16c4fb, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 2055727970026923782, guid: cc8bb205ae245a549b2047a26b16c4fb, type: 3}
       propertyPath: diverController
       value: 
       objectReference: {fileID: 283799327}
-    - target: {fileID: 5866780800400562345, guid: cc8bb205ae245a549b2047a26b16c4fb, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 7274591722214012175, guid: cc8bb205ae245a549b2047a26b16c4fb, type: 3}
       propertyPath: diverController
       value: 
@@ -1390,18 +1370,6 @@ PrefabInstance:
     - target: {fileID: 7274591722640960309, guid: cc8bb205ae245a549b2047a26b16c4fb, type: 3}
       propertyPath: m_Name
       value: Canvas_HUD
-      objectReference: {fileID: 0}
-    - target: {fileID: 7274591723723883677, guid: cc8bb205ae245a549b2047a26b16c4fb, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7274591724319480961, guid: cc8bb205ae245a549b2047a26b16c4fb, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7588182615477451340, guid: cc8bb205ae245a549b2047a26b16c4fb, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cc8bb205ae245a549b2047a26b16c4fb, type: 3}

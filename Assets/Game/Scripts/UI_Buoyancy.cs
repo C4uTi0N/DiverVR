@@ -29,10 +29,12 @@ public class UI_Buoyancy : MonoBehaviour
         }
         else if (buoyancy > 0) {
             buoNegSlider.value = 0;
+            if (buoyancy > extremum) buoyancy = extremum - 0.001f;
             buoPosSlider.value = buoyancy % extremum;
         }
         else {
             buoPosSlider.value = 0;
+            if (buoyancy < -extremum) buoyancy = -extremum + 0.001f;
             buoNegSlider.value = (-buoyancy) % extremum;
         }
     }
