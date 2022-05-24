@@ -144,50 +144,61 @@ public class DiveSettingsManager : MonoBehaviour
 
     void SetListeners()
     {
-        waterTempSlider.onValueChanged.AddListener((val) => {
+        waterTempSlider.onValueChanged.AddListener((val) =>
+        {
             diveSettings.waterTemp = val;
             waterTempValue.text = val.ToString();
         });
-        waterDensitySlider.onValueChanged.AddListener((val) => {
+        waterDensitySlider.onValueChanged.AddListener((val) =>
+        {
             diveSettings.waterDensity = val;
             waterDensityValue.text = val.ToString();
         });
-        atmosphericPressureSlider.onValueChanged.AddListener((val) => {
+        atmosphericPressureSlider.onValueChanged.AddListener((val) =>
+        {
             diveSettings.atmosphericPressure = val;
             atmosphericPressureValue.text = val.ToString();
         });
-        suitThicknessSlider.onValueChanged.AddListener((val) => {
+        suitThicknessSlider.onValueChanged.AddListener((val) =>
+        {
             diveSettings.suitThickness = val;
             suitThicknessValue.text = val.ToString();
         });
-        tankMaterialsDropdown.onValueChanged.AddListener((val) => {
+        tankMaterialsDropdown.onValueChanged.AddListener((val) =>
+        {
             diveSettings.matValue = val;
             if (diveSettings.matValue == 0) diveSettings.tankMaterial = DiveSettings.tankMaterials.Aluminium;
             else if (diveSettings.matValue == 1) diveSettings.tankMaterial = DiveSettings.tankMaterials.Steel;
         });
-        tankEmptyWeightSlider.onValueChanged.AddListener((val) => {
+        tankEmptyWeightSlider.onValueChanged.AddListener((val) =>
+        {
             diveSettings.tankEmptyWeight = val;
             tankEmptyWeightValue.text = val.ToString();
         });
-        tankStartPressSlider.onValueChanged.AddListener((val) => {
+        tankStartPressSlider.onValueChanged.AddListener((val) =>
+        {
             diveSettings.tankStartPress = val;
             diverController.InitDive(); // Have to recalculate gasRemainingMass.
             tankStartPressValue.text = val.ToString();
         });
-        tankCapacitySlider.onValueChanged.AddListener((val) => {
+        tankCapacitySlider.onValueChanged.AddListener((val) =>
+        {
             diveSettings.tankCapacity = val;
             diverController.InitDive(); // Have to recalculate gasRemainingMass.
             tankCapacityValue.text = val.ToString("0.0");
         });
-        leadWeightsSlider.onValueChanged.AddListener((val) => {
+        leadWeightsSlider.onValueChanged.AddListener((val) =>
+        {
             diveSettings.leadWeights = val;
             leadWeightsValue.text = val.ToString("0.0");
         });
-        BCDWeightSlider.onValueChanged.AddListener((val) => {
+        BCDWeightSlider.onValueChanged.AddListener((val) =>
+        {
             diveSettings.BCD_weight = val;
             BCDWeightValue.text = val.ToString("0.0");
         });
-        BCDCapacitySlider.onValueChanged.AddListener((val) => {
+        BCDCapacitySlider.onValueChanged.AddListener((val) =>
+        {
             diveSettings.BCD_Capacity = val;
             BCDCapacityValue.text = val.ToString();
         });

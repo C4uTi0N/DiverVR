@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "DiverScriptableObject", menuName = "Scriptable Objects/DiverSettings")]
-public class DiveSettings : ScriptableObject {
+public class DiveSettings : ScriptableObject
+{
 
     [field: Header("Environment Values")]
     [Range(-5, 40)] public float waterTemp = 15f;                           // Celcius

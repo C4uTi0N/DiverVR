@@ -9,8 +9,6 @@ public class UI_BCDVolume : MonoBehaviour
 
     public void Start()
     {
-
-
         bcd.maxValue = settings.BCD_Capacity;
         bcd.minValue = 0;
     }

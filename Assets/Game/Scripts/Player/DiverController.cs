@@ -1,14 +1,11 @@
 using System;
-using System.Collections;
 using UnityEngine;
 using TMPro;
 using UnityEngine.InputSystem;
-using System.Collections.Generic;
 using UnityEngine.XR.Interaction.Toolkit;
 
 
 [RequireComponent(typeof(Rigidbody))]
-
 public class DiverController : MonoBehaviour
 {
     public bool playerPaused = false;
@@ -75,7 +72,7 @@ public class DiverController : MonoBehaviour
     public string tankPressStr;
     public string timeAtDepthStr = "00h00m";
     public string maxDepthStr;
-    
+
 
 
     [Header("Object References")]
@@ -132,16 +129,21 @@ public class DiverController : MonoBehaviour
     }
 
 
-    private void FixedUpdate() {
-        if (playerPaused) {
-            if (_actionBasedContinuousMoveProvider.enabled == true) {
+    private void FixedUpdate()
+    {
+        if (playerPaused)
+        {
+            if (_actionBasedContinuousMoveProvider.enabled == true)
+            {
                 _actionBasedContinuousMoveProvider.enabled = false;
                 diverOldVelocity = _rb.velocity;
                 _rb.velocity = Vector3.zero;
             }
         }
-        else {
-            if (_actionBasedContinuousMoveProvider.enabled == false) {
+        else
+        {
+            if (_actionBasedContinuousMoveProvider.enabled == false)
+            {
                 _actionBasedContinuousMoveProvider.enabled = true;
                 _rb.velocity = diverOldVelocity;
             }
@@ -153,12 +155,14 @@ public class DiverController : MonoBehaviour
             submergence = PlayerSubmergence(_VRCamera.gameObject);    // Degree of submergence.
 
             // Here the dive is started and stopped.
-            if (submergence > 0) {
-                diveGoingOn = true;                     
+            if (submergence > 0)
+            {
+                diveGoingOn = true;
                 if (_actionBasedContinuousMoveProvider.enableStrafe == true)
                     _actionBasedContinuousMoveProvider.enableStrafe = false;
             }
-            else if (diveGoingOn) {
+            else if (diveGoingOn)
+            {
                 diveGoingOn = false;
                 _actionBasedContinuousMoveProvider.enableStrafe = true;
                 InitDive();
@@ -166,24 +170,29 @@ public class DiverController : MonoBehaviour
 
             // Updating timers.
             userDataUpdTimer += Time.deltaTime;
-            if (diveGoingOn) {
+            if (diveGoingOn)
+            {
                 breathTimer += Time.deltaTime;
                 diveTime += Time.deltaTime;
             }
             // Taking a breath (if the timer is running).
-            if (breathTimer > breathCooldown) {
+            if (breathTimer > breathCooldown)
+            {
                 breathTimer = 0;
                 TakeBreath();
             }
             // Updating water drag and buoyancy if the dive has begun.
-            if (diveGoingOn) {
-                if (BCD_DumpInProgress) {
+            if (diveGoingOn)
+            {
+                if (BCD_DumpInProgress)
+                {
                     if (BCD_DumpCounter < 50)
                     {
                         BCD_Surf_Vol -= BCD_DumpStep;
                         BCD_DumpCounter++;
                     }
-                    else {
+                    else
+                    {
                         BCD_DumpInProgress = false;
                     }
                 }
@@ -197,7 +206,8 @@ public class DiverController : MonoBehaviour
             // Allowing swim movement if more than half submerged.
             if (submergence > 0.5f) SwimMovement();
             // Updating data for UI
-            if (userDataUpdTimer > userDataCooldown) {
+            if (userDataUpdTimer > userDataCooldown)
+            {
                 userDataUpdTimer = 0;
 
                 // Calculating max stay-time at current depth.
@@ -236,7 +246,7 @@ public class DiverController : MonoBehaviour
     public void RefillTank()
     {
         tankPress = diveSettings.tankStartPress;     // Refilling the tank
-        double gasStartMass = VanDerWall_Mass( BarToPascal(tankPress),
+        double gasStartMass = VanDerWall_Mass(BarToPascal(tankPress),
                                                CelciusToKelvin(diveSettings.waterTemp),
                                                diveSettings.tankCapacity / 1000d
                                              );
@@ -257,7 +267,7 @@ public class DiverController : MonoBehaviour
         // Time
         timeStr = DateTime.Now.ToString("HH:mm");
         if (localTimeValue != null) { localTimeValue.text = timeStr; }
-        
+
 
         // Dive time (m�ske bare mm)
         TimeSpan ts1 = TimeSpan.FromSeconds(diveTime);
@@ -282,7 +292,7 @@ public class DiverController : MonoBehaviour
             netBuoyancyValue.text = (buoyancy / g).ToString("0.00") + " kg";
 
         if (BCD_AirVolValue != null)
-        BCD_AirVolValue.text = BCD_Volume.ToString("0.00") + " ltr";
+            BCD_AirVolValue.text = BCD_Volume.ToString("0.00") + " ltr";
 
         // Max depth dived
         if (maxDepth < depth)
@@ -306,7 +316,7 @@ public class DiverController : MonoBehaviour
     void TakeBreath()
     {
         float pascalPress = PressureAtDepth(_VRCamera.position.y);   // pascal, Pressure at current depth.
-        double breathGasMass = VanDerWall_Mass( pascalPress,
+        double breathGasMass = VanDerWall_Mass(pascalPress,
                                                 CelciusToKelvin(diveSettings.waterTemp),
                                                 (diveSettings.RMV / breathsPerMin / 1000d)
                                               );
@@ -334,7 +344,7 @@ public class DiverController : MonoBehaviour
         double totalBreathVol = (diveSettings.RMV / breathsPerMin) * breathCount / 1000d;   // m3, Total volume of air used during ascent.
         double ascentGasMass = 0;
         if (totalBreathVol > 0)
-            ascentGasMass = VanDerWall_Mass( avgPascals,                                    // kg, Total mass of ascent air.
+            ascentGasMass = VanDerWall_Mass(avgPascals,                                    // kg, Total mass of ascent air.
                                                 CelciusToKelvin(diveSettings.waterTemp),
                                                 totalBreathVol
                                             );
@@ -356,9 +366,9 @@ public class DiverController : MonoBehaviour
     float StopGasMass(float stopDuration, float depth)
     {
         double pascals = PressureAtDepth(_waterSurface - depth);
-        float  breathCount = stopDuration * breathsPerMin;
-        double  totalBreathVol = (diveSettings.RMV / breathsPerMin) * breathCount / 1000d;
-        double stopGasMass = VanDerWall_Mass( pascals,                             // kg, Total mass of stop air.
+        float breathCount = stopDuration * breathsPerMin;
+        double totalBreathVol = (diveSettings.RMV / breathsPerMin) * breathCount / 1000d;
+        double stopGasMass = VanDerWall_Mass(pascals,                             // kg, Total mass of stop air.
                                               CelciusToKelvin(diveSettings.waterTemp),
                                               totalBreathVol
                                              );
@@ -371,7 +381,7 @@ public class DiverController : MonoBehaviour
     {
         double pascals = PressureAtDepth(_VRCamera.position.y);          // pascal, Pressure at current depth.
         double oneBreathVol = (diveSettings.RMV / breathsPerMin / 1000d);
-        double oneBreathGasMass = VanDerWall_Mass( pascals,              // kg, mass of air used.
+        double oneBreathGasMass = VanDerWall_Mass(pascals,              // kg, mass of air used.
                                                    CelciusToKelvin(diveSettings.waterTemp),
                                                    oneBreathVol
                                                  );
@@ -454,7 +464,8 @@ public class DiverController : MonoBehaviour
     // Net. waterlift of divers Buoyance Control Device (BCD).
     float BCD_Buoyancy(float submergence)
     {
-        if (!BCD_DumpInProgress && rightControllerThumbStickButton.action.IsPressed()) {
+        if (!BCD_DumpInProgress && rightControllerThumbStickButton.action.IsPressed())
+        {
             BCD_DumpInProgress = true;
             BCD_DumpStep = BCD_Surf_Vol / 50f;
             BCD_DumpCounter = 0;
@@ -462,14 +473,11 @@ public class DiverController : MonoBehaviour
 
         double pascals = PressureAtDepth(_VRCamera.position.y);
         float BCD_StepSurfVol = BoyleNewVol(BCDVolStep, (float)pascals, diveSettings.atmosphericPressure * 100);
-        if (!BCD_DumpInProgress) {
+        if (!BCD_DumpInProgress)
+        {
             if (BCD_Volume <= diveSettings.BCD_Capacity - BCDVolStep && rightControllerSecondaryButton.action.IsPressed())
             {
-                if (BCDControl.bounds.Contains(_leftControllerTransform.position))
-                {
-                    // Put BCD control code in here to simulate grabbing the real BCd button thingy
-                }
-                BCD_Surf_Vol += BCD_StepSurfVol*1.5f;
+                BCD_Surf_Vol += BCD_StepSurfVol * 1.5f;
                 double deltaMass = VanDerWall_Mass(pascals,
                                         CelciusToKelvin(diveSettings.waterTemp),
                                         BCDVolStep / 1000d
@@ -478,12 +486,13 @@ public class DiverController : MonoBehaviour
             }
             if (BCD_Volume >= BCDVolStep && rightControllerPrimaryButton.action.IsPressed())
             {
-                BCD_Surf_Vol -= BCD_StepSurfVol*2.5f;
+                BCD_Surf_Vol -= BCD_StepSurfVol * 2.5f;
             }
         }
 
         // Checking if BCD have expanded beyond capacity. In that case releasing surplus.
-        if (BoyleVolAtDepth(_VRCamera.gameObject, BCD_Surf_Vol) > diveSettings.BCD_Capacity) {
+        if (BoyleVolAtDepth(_VRCamera.gameObject, BCD_Surf_Vol) > diveSettings.BCD_Capacity)
+        {
             float toRelease = BoyleVolAtDepth(_VRCamera.gameObject, BCD_Surf_Vol) - diveSettings.BCD_Capacity;
             BCD_Surf_Vol -= BoyleNewVol(toRelease, (float)pascals, diveSettings.atmosphericPressure * 100);
         }
@@ -526,7 +535,7 @@ public class DiverController : MonoBehaviour
         _rb.AddForce(buoyancyForce, ForceMode.Force);                               // Applying force.
         return buoyancy;
     }
-    
+
 
     // Calculating drag coefficient by the formula:  d = 1/2 * d * v^2 * A * Cd
     void Drag(Rigidbody rb, float submergence)
@@ -552,7 +561,8 @@ public class DiverController : MonoBehaviour
     // =================================================================================
     // Helper functions
     // =================================================================================
-    float CelciusToKelvin(float celcius) {
+    float CelciusToKelvin(float celcius)
+    {
         return 273.15f + celcius;
     }
 
@@ -568,7 +578,8 @@ public class DiverController : MonoBehaviour
 
 
     // Using the Van Der Wall equation.
-    double VanDerWall_Mass(double P, double T, double V) {
+    double VanDerWall_Mass(double P, double T, double V)
+    {
         // M, A, B for atmospheric air.
         const double M = 0.0289647d;   //  kg/mol,     Molar mass.         
         const double A = 0.1358d;      //  J/(mol*K),  Attraction between particles.
@@ -578,32 +589,32 @@ public class DiverController : MonoBehaviour
         // When the 'Van Der Wall' equation is put in the form of a 3rd deg. polynomium,
         // with n (number of moles) as the unknown,
         // then a, b ,c, d signifies the coefficients of the polynomium.
-        double a = - (A * B) / Math.Pow(V, 2d);
+        double a = -(A * B) / Math.Pow(V, 2d);
         double b = A / V;
-        double c = - (B * P  +  R * T);
+        double c = -(B * P + R * T);
         double d = P * V;
 
         // USING THE QUBIC FORMULA:
         // -----------------------------------------------------------------------------------
         // Simplifying by creating three expressions which is repetivive in the qubic formula.
-        double exp1 = (  -Math.Pow(b, 3d) / (27d * Math.Pow(a, 3d)) +
+        double exp1 = (-Math.Pow(b, 3d) / (27d * Math.Pow(a, 3d)) +
                         (b * c) / (6d * Math.Pow(a, 2d)) -
                         d / (2d * a)
                       );
-        double exp2 = ( c / (3d * a) -
-                       Math.Pow(b, 2d) / (9d * Math.Pow(a, 2d))  
+        double exp2 = (c / (3d * a) -
+                       Math.Pow(b, 2d) / (9d * Math.Pow(a, 2d))
                       );
         double exp3 = b / (3d * a);
 
         // Deriving the root (n = number of moles) of the polynomium, using the qubic formula.
-        double n = CubicRoot( exp1 +
-                             Math.Sqrt( Math.Pow(exp1, 2d) + 
+        double n = CubicRoot(exp1 +
+                             Math.Sqrt(Math.Pow(exp1, 2d) +
                                         Math.Pow(exp2, 3d)
                                       )
                             ) +
 
-                   CubicRoot( exp1 -
-                             Math.Sqrt( Math.Pow(exp1, 2d) +
+                   CubicRoot(exp1 -
+                             Math.Sqrt(Math.Pow(exp1, 2d) +
                                         Math.Pow(exp2, 3d)
                                       )
                             ) -
@@ -616,7 +627,8 @@ public class DiverController : MonoBehaviour
     }
 
 
-    double VanDerWall_Press(double m, double T, double V) {
+    double VanDerWall_Press(double m, double T, double V)
+    {
         // M, A, B for atmospheric air.
         const double M = 0.0289647d;   //  kg/mol,     Molar mass.         
         const double A = 0.1358d;      //  J/(mol*K),  Attraction between particles.
@@ -687,7 +699,8 @@ public class DiverController : MonoBehaviour
     // =================================================================================
 
 
-    private void SwimMovement() {
+    private void SwimMovement()
+    {
         _strokeCooldown += Time.fixedDeltaTime;
 
         // Vertical movement (simulated use of legs) (with left controller y(up) and x(down) buttons)

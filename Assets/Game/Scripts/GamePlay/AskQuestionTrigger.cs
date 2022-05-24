@@ -20,10 +20,10 @@ public class AskQuestionTrigger : Trigger
     public NotificationSO correctAnswer;
     public NotificationSO wrongAnswer;
 
-   
+
     protected override void OnEnter()
     {
-        askQuestionEventChannel.RaiseEvent(Question, CorrectAnswer);        
+        askQuestionEventChannel.RaiseEvent(Question, CorrectAnswer);
     }
 
     public void CorrectAnswer(bool answer)
@@ -35,7 +35,7 @@ public class AskQuestionTrigger : Trigger
         }
 
         notificationEventChannel.RaiseEvent(wrongAnswer, OnEnter);
-        
+
     }
 
 }

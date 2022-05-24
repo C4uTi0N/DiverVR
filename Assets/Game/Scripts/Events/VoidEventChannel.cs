@@ -7,7 +7,7 @@ using UnityEngine.Events;
 
 public class VoidEventChannel : ScriptableObject
 {
-   
+
     public UnityAction OnEventRaised;
 
     public void RaiseEvent()

@@ -7,7 +7,7 @@ public class PlayerSettingsManager : MonoBehaviour
     public DiveSettings diveSettings;
     public DiverController diverController;
 
-    
+
     // UI-Refs, Diver
     // =======================================================
     [Header("Diver UI Elements")]
@@ -30,7 +30,7 @@ public class PlayerSettingsManager : MonoBehaviour
 
     void GetSliderValues()
     {
-        
+
         diveSettings.diverHeight = diverHeightSlider.value;
         diveSettings.diverWeight = diverWeightSlider.value;
         diveSettings.RMV = RMVSlider.value;
@@ -47,18 +47,22 @@ public class PlayerSettingsManager : MonoBehaviour
 
     void SetListeners()
     {
-        diverHeightSlider.onValueChanged.AddListener((val) => {
+        diverHeightSlider.onValueChanged.AddListener((val) =>
+        {
             diveSettings.diverHeight = val;
             diverHeightValue.text = val.ToString();
         });
-        diverWeightSlider.onValueChanged.AddListener((val) => {
+        diverWeightSlider.onValueChanged.AddListener((val) =>
+        {
             diveSettings.diverWeight = val;
             diverWeightValue.text = val.ToString();
         });
-        RMVSlider.onValueChanged.AddListener((val) => {
+        RMVSlider.onValueChanged.AddListener((val) =>
+        {
             diveSettings.RMV = val;
             RMVValue.text = val.ToString();
-        }); MARSlider.onValueChanged.AddListener((val) => {
+        }); MARSlider.onValueChanged.AddListener((val) =>
+        {
             diveSettings.maxAscentRate = val;
             MARValue.text = val.ToString();
         });

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -144,10 +142,10 @@ public class WatchUI : MonoBehaviour
         {
             timer = 0;
         }
-        
+
         if (alarmPlayed)
         {
-            if (diverController.ascentRate <= 0.01)
+            if (diverController.ascentRate <= 0.08)
             {
                 timer += Time.deltaTime;
                 if (timer >= stopTime)
@@ -157,7 +155,7 @@ public class WatchUI : MonoBehaviour
                     timer = 0;
                 }
             }
-            if (diverController.ascentRate > 0.005)
+            if (diverController.ascentRate > 0.08)
             {
                 if (!alarm.isPlaying) { alarm.PlayDelayed(0.15f); }
             }

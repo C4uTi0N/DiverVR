@@ -43,7 +43,7 @@ public class QuestionManager : MonoBehaviour
 
             GameObject q = Instantiate(QuestionUiQuestion, new Vector3(0, offset, 0), Quaternion.identity);
             // get the first child of the canvas prefab which should be the background
-            q.transform.SetParent(background.transform.Find("Panel_Question").transform.Find("Background").transform, false); 
+            q.transform.SetParent(background.transform.Find("Panel_Question").transform.Find("Background").transform, false);
 
             q.GetComponentInChildren<TextMeshProUGUI>().text = answers;
             q.GetComponentInChildren<Button>().onClick.AddListener(delegate { OnClick(question, i, callback); });

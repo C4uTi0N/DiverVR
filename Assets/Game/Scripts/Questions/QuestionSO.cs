@@ -13,10 +13,10 @@ public class QuestionSO : ScriptableObject
     public List<string> Answers;
 
     [SerializeField]
-    public int CorrectAnswerIndex; 
+    public int CorrectAnswerIndex;
 
     public bool CheckAnswer(int answer)
     {
-        return CorrectAnswerIndex == answer; 
+        return CorrectAnswerIndex == answer;
     }
 }

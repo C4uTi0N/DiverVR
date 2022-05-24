@@ -3588,9 +3588,9 @@ MonoBehaviour:
   minStrokeInterval: 0
   _strokeCooldown: 0
   submergence: 0
+  ascentRate: 0
   BCD_Volume: 0
   BCD_Surf_Vol: 0
-  ascentRate: 0
   BCDVolStep: 0.015
   buoyancy: 0
   tankPress: 0

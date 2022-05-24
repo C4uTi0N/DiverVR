@@ -4,7 +4,6 @@ using UnityEngine;
 [RequireComponent(typeof(BoxCollider))]
 public abstract class Trigger : MonoBehaviour
 {
-
     [Header("Trigger")]
     public bool Repeatable;
     public string ColliderTag = "Player";

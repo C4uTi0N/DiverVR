@@ -15,10 +15,4 @@ public class CameraFinder : MonoBehaviour
         playerCamera = GameObject.Find("Camera").GetComponent<Camera>();
         thisCanvas.worldCamera = playerCamera;
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

@@ -9,9 +9,9 @@ public class QuestionEventChannelSO : ScriptableObject
 
     public void RaiseEvent(QuestionSO question, UnityAction<bool> callback)
     {
-        if(OnAskQuesiton != null)
+        if (OnAskQuesiton != null)
         {
             OnAskQuesiton.Invoke(question, callback);
         }
     }
- }
+}
