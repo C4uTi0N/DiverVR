@@ -43,7 +43,8 @@ public class DiverController : MonoBehaviour
     double gasRemainingMass;
     float safetyEndPress = 35f;             // bar, Minimum pressure to surface with (equivalent to 500 PSI).
     float ascentMaxMtrPerMin = 10f;         // m, Maximum meters/min when ascending.
-    float buoyancy = 0f;
+    [HideInInspector]
+    public float buoyancy = 0f;
     // BCD dump
     bool BCD_DumpInProgress = false;
     float BCD_DumpStep = 0;
@@ -61,7 +62,7 @@ public class DiverController : MonoBehaviour
     float diveTime;                         // s, Time elapsed since the dive began.
     float depth;                            // m, current diver depth
     int maxDepth;                           // m, max depth reached
-
+    [HideInInspector]
     public double tankPress;                        // bar, current pressure in tank
     float timeAtDepth;                      // s, The time left at current depth, (with time to surface subtracted).
     Vector3 diverOldVelocity;               // Velocity of diver, before the dive was paused

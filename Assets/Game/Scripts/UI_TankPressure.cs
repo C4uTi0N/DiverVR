@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class TankPressure : MonoBehaviour
+public class UI_TankPressure : MonoBehaviour
 {
     public Slider tankSlider;
     public DiveSettings settings;
