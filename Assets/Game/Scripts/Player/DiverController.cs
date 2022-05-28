@@ -50,14 +50,14 @@ public class DiverController : MonoBehaviour
     // User data variables
     bool diveGoingOn = false;               // Has the dive begun?
     float userDataCooldown = 0.25f;         // s, Update frequecy of user data.
-    //float userDataCooldown = 1f;         // s, Update frequecy of user data.
     float userDataUpdTimer = 0;
 
     // Diver values
     float previousDepth;                    // depth one second ago
     float time;                             // hh:mm:ss, current local time
     float diveTime;                         // s, Time elapsed since the dive began.
-    float depth;                            // m, current diver depth
+    [HideInInspector]
+    public float depth;                            // m, current diver depth
     int maxDepth;                           // m, max depth reached
     [HideInInspector]
     public double tankPress;                        // bar, current pressure in tank
@@ -255,9 +255,10 @@ public class DiverController : MonoBehaviour
 
     void CalculateAscentRate(float currentDepth)
     {
-        previousDepth = currentDepth;
-        ascentRate = (currentDepth - previousDepth) / 60;
+        float metersPerSec = (previousDepth - currentDepth) * (1f /userDataCooldown);   // meters per sec.
+        ascentRate = metersPerSec;
         if (ascentRate < 0) ascentRate = 0;
+        previousDepth = currentDepth;
     }
 
     // Entry point for updating UI (panel on diving watch, etc.)
