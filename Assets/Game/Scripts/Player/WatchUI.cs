@@ -36,8 +36,10 @@ public class WatchUI : MonoBehaviour
 
     float maxAscentRate;
     float timer = 0;
+    float timerCooldown = 0;
     public float stopTime = 60;
     public float timeLimit = 5;
+    bool initialAscentViolation = false;
     bool activeAscentViolation = false;
 
 
@@ -48,14 +50,13 @@ public class WatchUI : MonoBehaviour
 
         maxAscentRate = diveSettings.maxAscentRate / 60f;     // Meter per sek.
         ascentRateIndicatorSlider.maxValue = maxAscentRate;
-        print("Max Acent Rate is: " + maxAscentRate);
-
+        print("Max Acent Rate is: " + maxAscentRate + " m/s");
     }
 
 
     private void Update()
     {
-        // AscentRateViolation();
+        AscentRateViolation();
     }
 
 
@@ -63,7 +64,6 @@ public class WatchUI : MonoBehaviour
     {
         UpdateUI();
         ToggleWaterContact();
-        AscentRateViolation_V2();
     }
 
     private void UpdateUI()
@@ -126,22 +126,34 @@ public class WatchUI : MonoBehaviour
     }
 
 
-    void AscentRateViolation_V2() {
-        //print("Ascent Rate: " + diverController.ascentRate + " | Timer: " + timer);
+    void AscentRateViolation() {
 
         // Checking for violation
-        if (diverController.ascentRate > maxAscentRate && !activeAscentViolation)
+        if (diverController.ascentRate >= maxAscentRate && !activeAscentViolation)
         {
+            initialAscentViolation = true;
+            timerCooldown = 0;
+
             timer += Time.deltaTime;
             // If violation has not happened yet but timer expired, then alarm plays.
             if (timer >= timeLimit) {
                 alarm.Play();
+                print("Initial Alarm played!");
                 activeAscentViolation = true;
                 print("Ascent rate violation!... Mandatory stop need");
                 timer = 0;
             }
+        } else if (diverController.ascentRate < maxAscentRate && initialAscentViolation)
+        {
+            timerCooldown += Time.deltaTime;
+            if (timerCooldown >= timeLimit) {
+                initialAscentViolation = false;
+                timerCooldown = 0;
+                timer = 0;
+            }
         }
 
+        // Checking for continuous violation
         if (activeAscentViolation && Mathf.Abs(diverController.depth) > 2f) {
             if (diverController.ascentRate <= maxAscentRate / 2f) {
                 
@@ -153,47 +165,10 @@ public class WatchUI : MonoBehaviour
                     timer = 0;
                 }
             }
-            else if (!alarm.isPlaying) alarm.Play();
-        }
-
-    }
-
-
-    void AscentRateViolation()
-    {
-        if (diverController.ascentRate > maxAscentRate)
-        {
-            timer += Time.deltaTime;
-            //print("Ascent Rate: " + diverController.ascentRate + " | Timer: " + timer);
-            if (!activeAscentViolation && timer >= timeLimit)
-            {
-                alarm.Play();
-                activeAscentViolation = true;
-                print("Ascent rate violation!... Mandatory stop need");
-                timer = 0;
-            }
-        }
-        else if (diverController.ascentRate > 0.001)
-        {
-            timer = 0;
-        }
-
-        if (activeAscentViolation)
-        {
-            if (diverController.ascentRate <= 0.08)
-            {
-                timer += Time.deltaTime;
-                if (timer >= stopTime)
-                {
-                    activeAscentViolation = false;
-                    print("Mandatory stop completed");
-                    timer = 0;
-                }
-            }
-            if (diverController.ascentRate > 0.08)
-            {
-                if (!alarm.isPlaying) { alarm.PlayDelayed(0.15f); }
-            }
+            else if (!alarm.isPlaying) { 
+                alarm.PlayDelayed(0.15f); 
+                print("Post Alarm Played!"); 
+            };
         }
     }
 }
